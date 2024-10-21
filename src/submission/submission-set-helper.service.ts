@@ -7,7 +7,6 @@ import { QaCertEvent } from '../entities/qa-cert-event.entity';
 import { QaTee } from '../entities/qa-tee.entity';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { MatsBulkFile } from '../entities/mats-bulk-file.entity';
-import { currentDateTime } from '@us-epa-camd/easey-common/utilities/functions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { QaSuppData } from '../entities/qa-supp.entity';
 import { Plant } from '../entities/plant.entity';
