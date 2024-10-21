@@ -218,6 +218,9 @@ export class SubmissionEmailService {
       'submissionTemplate',
       submissionEmailParamsDto.templateContext,
       feedbackAttachmentDocuments,
+      submissionEmailParamsDto.submissionSet,
+      submissionEmailParamsDto.submissionQueueRecords,
+      submissionEmailParamsDto.processCode,
     );
   }
 
@@ -294,7 +297,7 @@ export class SubmissionEmailService {
         orisCode: submissionEmailParamsDto.orisCode || 'NA',
         stateCode: submissionEmailParamsDto.stateCode || 'NA',
         unitStackPipe: submissionEmailParamsDto.unitStackPipe || 'NA',
-        submissionDateDisplay: await this.submissionFeedbackRecordService.getDisplayDate(submissionSet.submittedOn,),
+        submissionDateDisplay: await this.submissionFeedbackRecordService.getDisplayDate(submissionSet.queuedTime,),
       },
     };
 

@@ -64,7 +64,7 @@ export class SubmissionService {
       submissionSet.monPlanIdentifier = evaluationItem.monPlanId;
       submissionSet.userIdentifier = userId;
       submissionSet.userEmail = userEmail;
-      submissionSet.submittedOn = currentTime;
+      submissionSet.queuedTime = currentTime;
       submissionSet.statusCode = 'QUEUED';
 
       //Push queueing stage here
@@ -113,7 +113,7 @@ export class SubmissionService {
         mpRecord.submissionSetIdentifier = setId;
         mpRecord.processCode = 'MP';
         mpRecord.statusCode = 'QUEUED';
-        mpRecord.submittedOn = currentTime;
+        mpRecord.queuedTime = currentTime;
 
         const cs: CheckSession = await entityManager
           .createQueryBuilder(CheckSession, 'cs')
@@ -151,7 +151,7 @@ export class SubmissionService {
         tsRecord.processCode = 'QA';
         tsRecord.statusCode = 'QUEUED';
         tsRecord.testSumIdentifier = id;
-        tsRecord.submittedOn = currentTime;
+        tsRecord.queuedTime = currentTime;
 
         const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
@@ -188,7 +188,7 @@ export class SubmissionService {
         qceRecord.statusCode = 'QUEUED';
 
         qceRecord.qaCertEventIdentifier = id;
-        qceRecord.submittedOn = currentTime;
+        qceRecord.queuedTime = currentTime;
 
         const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
@@ -222,7 +222,7 @@ export class SubmissionService {
         teeRecord.statusCode = 'QUEUED';
 
         teeRecord.testExtensionExemptionIdentifier = id;
-        teeRecord.submittedOn = currentTime;
+        teeRecord.queuedTime = currentTime;
 
         const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
@@ -265,7 +265,7 @@ export class SubmissionService {
         emissionRecord.statusCode = 'QUEUED';
 
         emissionRecord.rptPeriodIdentifier = rp.rptPeriodIdentifier;
-        emissionRecord.submittedOn = currentTime;
+        emissionRecord.queuedTime = currentTime;
 
         const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
@@ -302,7 +302,7 @@ export class SubmissionService {
         matsRecord.statusCode = 'QUEUED';
 
         matsRecord.matsBulkFileId = matsId;
-        matsRecord.submittedOn = currentTime;
+        matsRecord.queuedTime = currentTime;
 
         matsRecord.severityCode = 'NONE';
 

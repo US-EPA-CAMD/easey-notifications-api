@@ -62,5 +62,8 @@ export class SubmissionFeedbackEmailData {
     public emailTemplate: string,
     public templateContext: any,
     public feedbackAttachmentDocuments: any[],
+    public submissionSet : SubmissionSet,
+    public submissionQueueRecords : SubmissionQueue [],
+    public processCode : string,
   ) {}
 }

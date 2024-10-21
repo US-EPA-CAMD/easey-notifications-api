@@ -99,7 +99,7 @@ describe('ErrorHandlerService', () => {
       set.facIdentifier = 1;
       set.facName = 'Test Facility';
       set.orisCode = 123;
-      set.submittedOn = new Date('2024-07-07T00:00:00Z');
+      set.queuedTime = new Date('2024-07-07T00:00:00Z');
 
       const queueRecords = [new SubmissionQueue()];
       const error = new Error('Test Error');
@@ -143,7 +143,11 @@ describe('ErrorHandlerService', () => {
         set,
         queueRecords,
         'ERROR',
-        'Process failure, see submissionSet details',
+        JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        }),
         'REQUIRE',
       );
 
@@ -151,7 +155,7 @@ describe('ErrorHandlerService', () => {
       expect(entityManager.find).toHaveBeenCalledWith(SeverityCode);
       expect(submissionEmailService.findRecordWithHighestSeverityLevel).toHaveBeenCalledWith(queueRecords, severityCodes);
       expect(submissionEmailService.getSubmissionType).toHaveBeenCalledWith('EM');
-      expect(submissionFeedbackRecordService.getDisplayDate).toHaveBeenCalledWith(set.submittedOn || expect.any(Date));
+      expect(submissionFeedbackRecordService.getDisplayDate).toHaveBeenCalledWith(set.queuedTime || expect.any(Date));
 
       expect(mailEvalService.sendEmailWithRetry).toHaveBeenCalledTimes(2);
 

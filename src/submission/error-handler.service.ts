@@ -36,6 +36,36 @@ export class ErrorHandlerService {
     rootError: Error,
   ) {
     try {
+
+      // JSON.stringify the error note
+      try {
+        // Safely capture error note
+        submissionSet.note = JSON.stringify({
+          message: rootError?.message || 'No message',
+          stack: rootError?.stack || 'No stack trace available',
+          name: rootError?.name || 'UnknownError',
+        });
+      } catch (serializationError) {
+        // Fallback in case serialization fails
+        submissionSet.note = `Error serializing original error: ${serializationError.message}`;
+      } finally {
+        submissionSet.noteTime = new Date();
+      }
+
+      // Update the submission set status to 'ERROR'
+      try {
+        await this.submissionSetHelper.updateSubmissionSetStatus(submissionSet, 'ERROR', submissionSet.note);
+      } catch (updateError) {
+        this.logger.error('Error during handleQueueingError for submission set, while updating submission set: ' + submissionSet?.submissionSetIdentifier, updateError.stack,);
+      }
+
+      try {
+        // Attempt to update submission queue records
+        await this.submissionSetHelper.setRecordStatusCode(submissionSet, [currentSubmissionQueue], 'ERROR', submissionSet.note, 'REQUIRE',);
+      } catch (updateQueueError) {
+        this.logger.error('Error during handleQueueingError for submission set, while updating submission queue:' + submissionSet?.submissionSetIdentifier, updateQueueError.stack,);
+      }
+
       // Generate an error ID
       const errorId = uuidv4();
 
@@ -96,29 +126,31 @@ export class ErrorHandlerService {
   ) {
 
     try {
-      // JSON.stringify the error details
+      // JSON.stringify the error note
       try {
-        // Safely capture error details
-        submissionSet.details = JSON.stringify({
+        // Safely capture error note
+        submissionSet.note = JSON.stringify({
           message: rootError?.message || 'No message',
           stack: rootError?.stack || 'No stack trace available',
           name: rootError?.name || 'UnknownError',
         });
       } catch (serializationError) {
         // Fallback in case serialization fails
-        submissionSet.details = `Error serializing original error: ${serializationError.message}`;
+        submissionSet.note = `Error serializing original error: ${serializationError.message}`;
+      } finally {
+        submissionSet.noteTime = new Date();
       }
 
       // Update the submission set status to 'ERROR'
       try {
-        await this.submissionSetHelper.updateSubmissionSetStatus(submissionSet, 'ERROR', submissionSet.details);
+        await this.submissionSetHelper.updateSubmissionSetStatus(submissionSet, 'ERROR', submissionSet.note);
       } catch (updateError) {
         this.logger.error('Error during handleSubmissionProcessingError for submission set, while updating submission set: ' + submissionSet?.submissionSetIdentifier, updateError.stack,);
       }
 
       try {
         // Attempt to update submission queue records
-        await this.submissionSetHelper.setRecordStatusCode(submissionSet, queueRecords, 'ERROR', 'Process failure, see submissionSet details', 'REQUIRE',);
+        await this.submissionSetHelper.setRecordStatusCode(submissionSet, queueRecords, 'ERROR', submissionSet.note, 'REQUIRE',);
       } catch (updateQueueError) {
         this.logger.error('Error during handleSubmissionProcessingError for submission set, while updating submission queue:' + submissionSet?.submissionSetIdentifier, updateQueueError.stack,);
       }
@@ -246,7 +278,7 @@ export class ErrorHandlerService {
     // Get submission date display
     let submissionDateDisplay: string = new Date().toLocaleString();
     try {
-      submissionDateDisplay = await this.submissionFeedbackRecordService.getDisplayDate(submissionSet?.submittedOn || new Date());
+      submissionDateDisplay = await this.submissionFeedbackRecordService.getDisplayDate(submissionSet?.queuedTime || new Date());
     } catch (dateDisplayError) {
       this.logger.error('Failed to get submission date display.', dateDisplayError.stack);
     }

@@ -41,8 +41,8 @@ describe('SubmissionSetHelperService', () => {
       await service.updateSubmissionSetStatus(submissionSet, 'COMPLETE', 'Details');
 
       expect(submissionSet.statusCode).toBe('COMPLETE');
-      expect(submissionSet.details).toBe('Details');
-      expect(submissionSet.endStageTime).toBeDefined();
+      expect(submissionSet.note).toBe('Details');
+      expect(submissionSet.completedTime).toBeDefined();
       expect(entityManager.save).toHaveBeenCalledWith(submissionSet);
     });
   });
@@ -62,7 +62,7 @@ describe('SubmissionSetHelperService', () => {
       await service.setRecordStatusCode(set, [record], 'COMPLETE', 'Details', 'UPDATED');
 
       expect(record.statusCode).toBe('COMPLETE');
-      expect(record.details).toBe('Details');
+      expect(record.note).toBe('Details');
       expect(monitorPlan.submissionAvailabilityCode).toBe('UPDATED');
       expect(entityManager.save).toHaveBeenCalledTimes(2);
     });

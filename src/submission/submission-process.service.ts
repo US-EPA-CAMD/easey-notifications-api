@@ -96,22 +96,30 @@ export class SubmissionProcessService {
       // Send all feedback status emails once the copy/delete transaction is over
       this.logger.debug('Sending emails with feedback attachment ...');
       for (const submissionFeedbackEmailData of submissionFeedbackEmailDataList) {
+
           this.logger.debug('Sending email feedback...', {
             toEmail: submissionFeedbackEmailData.toEmail,
             ccEmail: submissionFeedbackEmailData.ccEmail,
             subject: submissionFeedbackEmailData.subject,
           });
 
-        await this.mailEvalService.sendEmailWithRetry(
-            submissionFeedbackEmailData.toEmail,
-            submissionFeedbackEmailData.ccEmail,
-            submissionFeedbackEmailData.fromEmail,
-            submissionFeedbackEmailData.subject,
-            submissionFeedbackEmailData.emailTemplate,
-            submissionFeedbackEmailData.templateContext,
-            1,
-            submissionFeedbackEmailData.feedbackAttachmentDocuments,
-          );
+          // Attempt to send an email. If sending an email for this particular file type fails,
+          // log the error and continue attempting to send emails for the others
+          try {
+            await this.mailEvalService.sendEmailWithRetry(
+              submissionFeedbackEmailData.toEmail,
+              submissionFeedbackEmailData.ccEmail,
+              submissionFeedbackEmailData.fromEmail,
+              submissionFeedbackEmailData.subject,
+              submissionFeedbackEmailData.emailTemplate,
+              submissionFeedbackEmailData.templateContext,
+              1,
+              submissionFeedbackEmailData.feedbackAttachmentDocuments,
+            );
+          } catch (e) {
+            this.logger.error('Error attempting to send feedback email : ' +  {processCode : submissionFeedbackEmailData.processCode}, e.stack, 'SubmissionProcessService');
+            await this.errorHandlerService.handleSubmissionProcessingError(submissionFeedbackEmailData.submissionSet, submissionFeedbackEmailData.submissionQueueRecords, submissionStages, e);
+          }
       }
 
       submissionStages.push({ action: 'FEEDBACK_EMAILS_SENT', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });

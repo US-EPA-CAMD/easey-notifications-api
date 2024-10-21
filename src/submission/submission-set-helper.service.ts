@@ -22,16 +22,22 @@ export class SubmissionSetHelperService {
   async updateSubmissionSetStatus(
     submissionSet: SubmissionSet,
     statusCode: string,
-    details: string = '',
-    updateEndStageTime: boolean = true,
+    note: string = '',
   ): Promise<void> {
     submissionSet.statusCode = statusCode;
-    if (details) {
-      submissionSet.details = details;
+    if (note) {
+      submissionSet.note = note;
+      submissionSet.noteTime = new Date();
     }
-    if (updateEndStageTime) {
-      submissionSet.endStageTime = currentDateTime();
+
+    if (statusCode === 'WIP') {
+      submissionSet.startedTime = new Date();
     }
+
+    if (statusCode === 'COMPLETE') {
+      submissionSet.completedTime = new Date();
+    }
+
     await this.entityManager.save(submissionSet);
   }
 
@@ -39,12 +45,24 @@ export class SubmissionSetHelperService {
     set: SubmissionSet,
     records: SubmissionQueue[],
     statusCode: string,
-    details: string,
+    note: string,
     originRecordCode: string,
   ): Promise<void> {
     for (const record of records) {
       record.statusCode = statusCode;
-      record.details = details;
+
+      if (note) {
+        record.note = note;
+        record.noteTime = new Date();
+      }
+
+      if (statusCode === 'WIP') {
+        record.startedTime = new Date();
+      }
+
+      if (statusCode === 'COMPLETE') {
+        record.completedTime = new Date();
+      }
 
       let originRecord;
 

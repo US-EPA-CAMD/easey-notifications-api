@@ -56,7 +56,7 @@ export class SubmissionFeedbackRecordService {
     dataPairs.push({
       key: 'Submission Date/Time:',
       value: await this.getDisplayDate(
-        submissionEmailParamsDto.submissionSet.submittedOn,
+        submissionEmailParamsDto.submissionSet.queuedTime,
       ),
     });
 

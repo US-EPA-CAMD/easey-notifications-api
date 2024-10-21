@@ -74,7 +74,7 @@ describe('DataSetService', () => {
 
   //     expect(repository.getDataSet).toHaveBeenCalled();
   //     expect(repository.query).toHaveBeenCalled();
-  //     expect(result).toEqual({"columns": [], "details": [], "displayName": "Test"});
+  //     expect(result).toEqual({"columns": [], "note": [], "displayName": "Test"});
   //   });
 
   // });
