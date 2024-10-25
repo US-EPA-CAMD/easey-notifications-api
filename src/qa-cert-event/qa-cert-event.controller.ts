@@ -6,7 +6,6 @@ import {
   Query,
   Param,
   Body,
-  UseInterceptors,
 } from '@nestjs/common/decorators';
 import {
   ApiOkResponse,
@@ -14,14 +13,13 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { LoggingInterceptor } from '@us-epa-camd/easey-common/interceptors';
 import {
   BadRequestResponse,
   NotFoundResponse,
 } from '../utilities/swagger-decorator.const';
 import { QaCertEventService } from './qa-cert-event.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
@@ -66,7 +64,10 @@ export class QaCertEventController {
     description:
       'Changes submission status to resubmit and update re-submission explanation for QA Test maintenance record.',
   })
-  @UseInterceptors(LoggingInterceptor)
+  @AuditLog({
+    label: 'QA Cert Event Maintenance - Require Resubmission',
+    outFields: '*',
+  })
   updateSubmissionStatus(
     @Param('id') id: string,
     @User() user: CurrentUser,
@@ -85,7 +86,10 @@ export class QaCertEventController {
   @ApiOperation({
     description: 'Deletes a QA Cert Event record from global.',
   })
-  @UseInterceptors(LoggingInterceptor)
+  @AuditLog({
+    label: 'QA Cert Event Maintenance - Delete',
+    outFields: '*',
+  })
   async deleteQACertEventData(@Param('id') id: string): Promise<any> {
     return this.service.deleteQACertEventData(id);
   }
