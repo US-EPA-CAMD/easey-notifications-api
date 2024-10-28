@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom } from 'rxjs';
+import * as https from 'https';
+import * as crypto from 'crypto';
 
 
 @Injectable()
@@ -94,9 +96,15 @@ export class RecipientListService {
       isMats: isMats,
     };
 
+    const allowLegacyRenegotiationforNodeJsOptions = {
+      httpsAgent: new https.Agent({
+        secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+      }),
+    };
+
     try {
       const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.post(url, body, { headers }),
+        this.httpService.post(url, body, { headers, ...allowLegacyRenegotiationforNodeJsOptions }),
       );
 
       if (!response.data || !Array.isArray(response.data)) {
