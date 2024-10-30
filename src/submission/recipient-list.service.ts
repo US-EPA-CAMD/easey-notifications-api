@@ -59,7 +59,7 @@ export class RecipientListService {
   }
 
   async getEmailRecipients(
-    userId: string = 'defaultUserId',
+    userId: string,
     submissionType: string,
     isMats: string = '',
     emailType: string = 'SUBMISSIONCONFIRMATION',
