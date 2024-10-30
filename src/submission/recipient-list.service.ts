@@ -59,11 +59,11 @@ export class RecipientListService {
   }
 
   async getEmailRecipients(
+    userId: string,
+    submissionType: string,
+    isMats: string = '',
     emailType: string = 'SUBMISSIONCONFIRMATION',
     plantId: string = '0',
-    userId: string = 'defaultUserId',
-    submissionType?: string,
-    isMats: string = '',
   ): Promise<string> {
 
     this.logger.debug('getEmailRecipients with params', { emailType, plantId, userId, submissionType, isMats });
@@ -74,7 +74,6 @@ export class RecipientListService {
       return '';
     }
 
-    //const url = `${recipientsListApiUrl}/api/auth-mgmt/emailRecipients`
     this.logger.debug('using recipientsListApiUrl: ' + recipientsListApiUrl);
 
     //Obtain client token
@@ -85,6 +84,7 @@ export class RecipientListService {
     }
 
     const headers = {
+      'x-api-key': this.configService.get<string>('app.apiKey'),
       Authorization: `Bearer ${clientToken}`,
     };
 
@@ -96,8 +96,8 @@ export class RecipientListService {
       isMats: isMats,
     };
 
-    this.logger.debug('Making API call to:', recipientsListApiUrl);
-    this.logger.debug('Request body:', JSON.stringify(body));
+    this.logger.debug('Making API call to:', { url: recipientsListApiUrl });
+    this.logger.debug('Request body:', { body: body });
 
     const allowLegacyRenegotiationforNodeJsOptions = {
       httpsAgent: new https.Agent({
