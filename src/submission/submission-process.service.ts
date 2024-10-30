@@ -815,10 +815,10 @@ export class SubmissionProcessService {
 
     submissionEmailParamsDto.ccEmail = recipientsListApiEnabled ? await this.recipientListService.getEmailRecipients(
       'SUBMISSIONCONFIRMATION',
-      submissionEmailParamsDto.facId,
+      submissionEmailParamsDto.facId?.toString(),
       submissionSet.userIdentifier,
       submissionEmailParamsDto.processCode,
-      false
+      '',
     ) : '';
 
     //Set to and cc emails
