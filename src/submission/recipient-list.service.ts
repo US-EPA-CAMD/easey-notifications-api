@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom } from 'rxjs';
+import * as https from 'https';
+import * as crypto from 'crypto';
 
 
 @Injectable()
@@ -57,23 +59,22 @@ export class RecipientListService {
   }
 
   async getEmailRecipients(
+    userId: string,
+    submissionType: string,
+    isMats: string = '',
     emailType: string = 'SUBMISSIONCONFIRMATION',
-    plantId: number = 0,
-    userId: string = 'defaultUserId',
-    submissionType?: string,
-    isMats: boolean = false,
+    plantId: string = '0',
   ): Promise<string> {
 
     this.logger.debug('getEmailRecipients with params', { emailType, plantId, userId, submissionType, isMats });
 
-    const recipientsListApi = this.configService.get<string>('app.recipientsListApi');
-    if (!recipientsListApi) {
-      this.logger.error('recipientsListApi is not configured');
+    const recipientsListApiUrl = this.configService.get<string>('app.recipientsListApi');
+    if (!recipientsListApiUrl) {
+      this.logger.error('recipientsListApiUrl is not configured');
       return '';
     }
 
-    const url = `${recipientsListApi}/api/auth-mgmt/emailRecipients`
-    this.logger.debug('using recipientsListApi: ' + url);
+    this.logger.debug('using recipientsListApiUrl: ' + recipientsListApiUrl);
 
     //Obtain client token
     const clientToken = await this.getClientToken();
@@ -83,6 +84,7 @@ export class RecipientListService {
     }
 
     const headers = {
+      'x-api-key': this.configService.get<string>('app.apiKey'),
       Authorization: `Bearer ${clientToken}`,
     };
 
@@ -94,13 +96,22 @@ export class RecipientListService {
       isMats: isMats,
     };
 
+    this.logger.debug('Making API call to:', { url: recipientsListApiUrl });
+    this.logger.debug('Request body:', { body: body });
+
+    const allowLegacyRenegotiationforNodeJsOptions = {
+      httpsAgent: new https.Agent({
+        secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+      }),
+    };
+
     try {
       const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.post(url, body, { headers }),
+        this.httpService.post(recipientsListApiUrl, body, { headers, ...allowLegacyRenegotiationforNodeJsOptions }),
       );
 
       if (!response.data || !Array.isArray(response.data)) {
-        this.logger.error('Invalid response format from emailRecipients API');
+        this.logger.error('Invalid response format from emailRecipients API', response.data);
         return '';
       }
 
@@ -111,7 +122,12 @@ export class RecipientListService {
 
       return emailList;
     } catch (error) {
-      this.logger.error('Error occurred during the API call to emailRecipients', error);
+      this.logger.error('Error occurred during the API call to emailRecipients', error.message || error);
+      // Check if the error has a response (e.g., HTTP status code errors)
+      if (error.response) {
+        this.logger.error('API response error status:', error.response.status || '');
+        this.logger.error('API response error data:', error.response.data || '');
+      }
       return '';
     }
   }
