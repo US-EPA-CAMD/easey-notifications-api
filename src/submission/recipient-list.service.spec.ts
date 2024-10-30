@@ -162,7 +162,7 @@ describe('RecipientListService', () => {
       jest.spyOn(configService, 'get').mockReturnValue('http://mock-recipients-list-api.com');
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
       jest.spyOn(httpService, 'post').mockImplementation(() => {
-        throw new Error('API Error');
+        throw new Error('API Error With Logging');
       });
 
       const result = await service.getEmailRecipients('','','','','');
