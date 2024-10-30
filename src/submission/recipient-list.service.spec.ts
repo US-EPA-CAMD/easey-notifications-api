@@ -129,7 +129,7 @@ describe('RecipientListService', () => {
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
-      const result = await service.getEmailRecipients();
+      const result = await service.getEmailRecipients('','','','','');
       expect(result).toEqual('email1@example.com;email2@example.com');
     });
 
@@ -137,7 +137,7 @@ describe('RecipientListService', () => {
       jest.spyOn(configService, 'get').mockReturnValue('http://mock-recipients-list-api.com');
       jest.spyOn(service, 'getClientToken').mockResolvedValue('');
 
-      const result = await service.getEmailRecipients();
+      const result = await service.getEmailRecipients('','','','','');
       expect(result).toEqual('');
     });
 
@@ -154,7 +154,7 @@ describe('RecipientListService', () => {
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
-      const result = await service.getEmailRecipients();
+      const result = await service.getEmailRecipients('','','','','');
       expect(result).toEqual('');
     });
 
@@ -165,7 +165,7 @@ describe('RecipientListService', () => {
         throw new Error('API Error');
       });
 
-      const result = await service.getEmailRecipients();
+      const result = await service.getEmailRecipients('','','','','');
       expect(result).toEqual('');
     });
   });
