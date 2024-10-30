@@ -59,11 +59,11 @@ export class RecipientListService {
   }
 
   async getEmailRecipients(
-    emailType: string = 'SUBMISSIONCONFIRMATION',
-    plantId: string = '0',
     userId: string = 'defaultUserId',
     submissionType: string,
     isMats: string = '',
+    emailType: string = 'SUBMISSIONCONFIRMATION',
+    plantId: string = '0',
   ): Promise<string> {
 
     this.logger.debug('getEmailRecipients with params', { emailType, plantId, userId, submissionType, isMats });
