@@ -29,12 +29,24 @@ export class Evaluation extends BaseEntity {
   })
   rptPeriodIdentifier?: number;
 
-  @Column({ name: 'submitted_on' })
-  submittedOn: Date;
+  @Column({ name: 'queued_time' })
+  queuedTime: Date;
 
   @Column({ name: 'status_cd' })
   statusCode: string;
 
   @Column({ name: 'eval_status_cd' })
   evalStatusCode?: string;
+
+  @Column({ name: 'started_time' })
+  startedTime?: Date;
+
+  @Column({ name: 'completed_time' })
+  completedTime?: Date;
+
+  @Column({ name: 'note' })
+  note?: string;
+
+  @Column({ name: 'note_time' })
+  noteTime?: Date;
 }

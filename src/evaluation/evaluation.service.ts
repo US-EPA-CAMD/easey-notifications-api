@@ -70,7 +70,7 @@ export class EvaluationService {
         mpRecord.evaluationSetIdentifier = set_id;
         mpRecord.processCode = 'MP';
         mpRecord.statusCode = 'QUEUED';
-        mpRecord.submittedOn = currentTime;
+        mpRecord.queuedTime = currentTime;
 
         await this.returnManager().save(mpRecord);
         await this.returnManager().save(mp);
@@ -97,7 +97,7 @@ export class EvaluationService {
             tsRecord.statusCode = 'PENDING';
           }
           tsRecord.testSumIdentifier = testSummary.testSumIdentifier;
-          tsRecord.submittedOn = currentTime;
+          tsRecord.queuedTime = currentTime;
           await this.returnManager().save(testSummary);
           await this.returnManager().save(tsRecord);
         }
@@ -120,7 +120,7 @@ export class EvaluationService {
         }
 
         qceRecord.qaCertEventIdentifier = id;
-        qceRecord.submittedOn = currentTime;
+        qceRecord.queuedTime = currentTime;
 
         await this.returnManager().save(qce);
         await this.returnManager().save(qceRecord);
@@ -143,7 +143,7 @@ export class EvaluationService {
         }
 
         teeRecord.testExtensionExemptionIdentifier = id;
-        teeRecord.submittedOn = currentTime;
+        teeRecord.queuedTime = currentTime;
 
         await this.returnManager().save(tee);
         await this.returnManager().save(teeRecord);
@@ -176,7 +176,7 @@ export class EvaluationService {
           emissionRecord.statusCode = 'PENDING';
         }
         emissionRecord.rptPeriodIdentifier = rp.rptPeriodIdentifier;
-        emissionRecord.submittedOn = currentTime;
+        emissionRecord.queuedTime = currentTime;
 
         await this.returnManager().save(ee);
         await this.returnManager().save(emissionRecord);

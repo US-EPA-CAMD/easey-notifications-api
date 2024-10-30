@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom } from 'rxjs';
-import * as crypto from 'crypto';
 import * as https from 'https';
+import * as crypto from 'crypto';
 
 
 @Injectable()
