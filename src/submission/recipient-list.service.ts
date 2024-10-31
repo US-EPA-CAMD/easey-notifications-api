@@ -144,6 +144,8 @@ export class RecipientListService {
         this.logger.error('API response error status:', error.response.status || '');
         this.logger.error('API response error data:', error.response.data || '');
       }
+
+      return '';
     }
   }
 }
