@@ -85,6 +85,8 @@ export class RecipientListService {
 
     const headers = {
       'x-api-key': this.configService.get<string>('app.apiKey'),
+      'x-client-id': this.configService.get<string>('app.clientId'),
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${clientToken}`,
     };
 
@@ -104,6 +106,60 @@ export class RecipientListService {
         secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
       }),
     };
+
+    //Attempt A GET request first
+    try {
+
+      const params = {
+        emailType: emailType,
+        plantId: plantId,
+        submissionType: submissionType,
+        userId: userId,
+        isMats: isMats,
+      };
+
+      // Log the actual request object before making the request
+      this.logger.debug('GET Request object:', {
+        url: recipientsListApiUrl,
+        method: 'GET',
+        params: params,
+        headers: headers,
+      });
+
+      const response: AxiosResponse<any> = await firstValueFrom(
+        this.httpService.get(recipientsListApiUrl, {
+          headers,
+          params,
+          ...allowLegacyRenegotiationforNodeJsOptions,
+        }),
+      );
+
+      // Log the actual response object after receiving the response
+      this.logger.debug('GET Response object:', {
+        status: response.status,
+        headers: response.headers,
+        data: response.data,
+      });
+
+      if (!response.data || !Array.isArray(response.data)) {
+        this.logger.error('GET Invalid response format from emailRecipients API', response.data);
+        return '';
+      }
+
+      const emailList = response.data
+        .map(item => item.emailAddressList)
+        .filter(emailAddressList => emailAddressList)
+        .join(';');
+
+      return emailList;
+    } catch (error) {
+      this.logger.error('GET Error occurred during the API call to emailRecipients', error.message || error);
+      // Check if the error has a response (e.g., HTTP status code errors)
+      if (error.response) {
+        this.logger.error('GET API response error status:', error.response.status || '');
+        this.logger.error('GET API response error data:', error.response.data || '');
+      }
+    }
 
     try {
       const response: AxiosResponse<any> = await firstValueFrom(
