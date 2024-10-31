@@ -99,7 +99,6 @@ export class RecipientListService {
     };
 
     this.logger.debug('Making API call to:', { url: recipientsListApiUrl });
-    this.logger.debug('Request body:', { body: body });
 
     const allowLegacyRenegotiationforNodeJsOptions = {
       httpsAgent: new https.Agent({
@@ -107,24 +106,9 @@ export class RecipientListService {
       }),
     };
 
-    //Attempt A GET request first
+    // This request is a bit unconventional.  The CBS API expects a GET request with a body.
+    // Axios does not support this, so we are using the httpService.request method
     try {
-
-      const params = {
-        emailType: emailType,
-        plantId: plantId,
-        submissionType: submissionType,
-        userId: userId,
-        isMats: isMats,
-      };
-
-      // Log the actual request object before making the request
-      this.logger.debug('GET Request object:', {
-        url: recipientsListApiUrl,
-        method: 'GET',
-        params: params,
-        headers: headers,
-      });
 
       const response: AxiosResponse<any> = await firstValueFrom(
         this.httpService.request({
@@ -132,46 +116,19 @@ export class RecipientListService {
           url: recipientsListApiUrl,
           headers: headers,
           data: body,
-          // Include any other options like httpsAgent if necessary
           ...allowLegacyRenegotiationforNodeJsOptions,
         }),
-      );
-
-      // Log the actual response object after receiving the response
-      this.logger.debug('GET Response object:', {
-        status: response.status,
-        headers: response.headers,
-        data: response.data,
-      });
-
-      if (!response.data || !Array.isArray(response.data)) {
-        this.logger.error('GET Invalid response format from emailRecipients API', response.data);
-        return '';
-      }
-
-      const emailList = response.data
-        .map(item => item.emailAddressList)
-        .filter(emailAddressList => emailAddressList)
-        .join(';');
-
-      return emailList;
-    } catch (error) {
-      this.logger.error('GET Error occurred during the API call to emailRecipients', error.message || error);
-      // Check if the error has a response (e.g., HTTP status code errors)
-      if (error.response) {
-        this.logger.error('GET API response error status:', error.response.status || '');
-        this.logger.error('GET API response error data:', error.response.data || '');
-      }
-    }
-
-    try {
-      const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.post(recipientsListApiUrl, body, { headers, ...allowLegacyRenegotiationforNodeJsOptions }),
       );
 
       if (!response.data || !Array.isArray(response.data)) {
         this.logger.error('Invalid response format from emailRecipients API', response.data);
         return '';
+      }
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        this.logger.debug('First item of the email list: ', response.data[0]);
+      } else {
+        this.logger.debug('response.data is is empty.');
       }
 
       const emailList = response.data
@@ -187,6 +144,7 @@ export class RecipientListService {
         this.logger.error('API response error status:', error.response.status || '');
         this.logger.error('API response error data:', error.response.data || '');
       }
+
       return '';
     }
   }
