@@ -85,6 +85,8 @@ export class RecipientListService {
 
     const headers = {
       'x-api-key': this.configService.get<string>('app.apiKey'),
+      'x-client-id': this.configService.get<string>('app.clientId'),
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${clientToken}`,
     };
 
