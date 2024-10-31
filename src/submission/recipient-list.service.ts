@@ -121,7 +121,7 @@ export class RecipientListService {
       );
 
       if (!response.data || !Array.isArray(response.data)) {
-        this.logger.error('GET Invalid response format from emailRecipients API', response.data);
+        this.logger.error('Invalid response format from emailRecipients API', response.data);
         return '';
       }
 
@@ -138,11 +138,11 @@ export class RecipientListService {
 
       return emailList;
     } catch (error) {
-      this.logger.error('GET Error occurred during the API call to emailRecipients', error.message || error);
+      this.logger.error('Error occurred during the API call to emailRecipients', error.message || error);
       // Check if the error has a response (e.g., HTTP status code errors)
       if (error.response) {
-        this.logger.error('GET API response error status:', error.response.status || '');
-        this.logger.error('GET API response error data:', error.response.data || '');
+        this.logger.error('API response error status:', error.response.status || '');
+        this.logger.error('API response error data:', error.response.data || '');
       }
     }
   }
