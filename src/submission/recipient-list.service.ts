@@ -127,9 +127,12 @@ export class RecipientListService {
       });
 
       const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.get(recipientsListApiUrl, {
-          headers,
-          params,
+        this.httpService.request({
+          method: 'GET',
+          url: recipientsListApiUrl,
+          headers: headers,
+          data: body,
+          // Include any other options like httpsAgent if necessary
           ...allowLegacyRenegotiationforNodeJsOptions,
         }),
       );
