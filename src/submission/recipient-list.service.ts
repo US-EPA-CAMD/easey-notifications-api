@@ -110,14 +110,6 @@ export class RecipientListService {
     // Axios does not support this, so we are using the httpService.request method
     try {
 
-      const params = {
-        emailType: emailType,
-        plantId: plantId,
-        submissionType: submissionType,
-        userId: userId,
-        isMats: isMats,
-      };
-
       const response: AxiosResponse<any> = await firstValueFrom(
         this.httpService.request({
           method: 'GET',
