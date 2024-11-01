@@ -53,45 +53,51 @@ describe('-- Submission Service --', () => {
 
   it('should execute a payload successfully and make the proper calls', async () => {
     const mockInsertion = jest.fn();
+    const mockFind = jest.fn().mockImplementation((val) => {
+      switch (val.name) {
+        case 'MonitorPlan':
+          const mp = new MonitorPlan();
+          mp.facIdentifier = 1;
+          mp.locations = [];
+          return mp;
+        case 'Plant':
+          const p = new Plant();
+          p.facilityName = 'test';
+          p.orisCode = 1;
+          return p;
+        case 'QaSuppData':
+          return new QaSuppData();
+        case 'QaCertEvent':
+          return new QaCertEvent();
+        case 'QaTee':
+          return new QaTee();
+        case 'ReportingPeriod':
+          const rp = new ReportingPeriod();
+          rp.rptPeriodIdentifier = 1;
+          return rp;
+        case 'CheckSession':
+          const cs = new CheckSession();
+          return cs;
+        case 'EmissionEvaluation':
+          return new EmissionEvaluation();
+        case 'MatsBulkFile':
+          return new MatsBulkFile();
+      }
+      return false;
+    });
 
     jest.spyOn(service, 'returnManager').mockReturnValue({
+      countBy: jest.fn().mockResolvedValue(0),
+
       query: jest.fn().mockResolvedValue([
         {
           unitid: 'mockName',
         },
       ]),
 
-      findOneBy: jest.fn().mockImplementation((val) => {
-        switch (val.name) {
-          case 'MonitorPlan':
-            const mp = new MonitorPlan();
-            mp.facIdentifier = 1;
-            return mp;
-          case 'Plant':
-            const p = new Plant();
-            p.facilityName = 'test';
-            p.orisCode = 1;
-            return p;
-          case 'QaSuppData':
-            return new QaSuppData();
-          case 'QaCertEvent':
-            return new QaCertEvent();
-          case 'QaTee':
-            return new QaTee();
-          case 'ReportingPeriod':
-            const rp = new ReportingPeriod();
-            rp.rptPeriodIdentifier = 1;
-            return rp;
-          case 'CheckSession':
-            const cs = new CheckSession();
-            return cs;
-          case 'EmissionEvaluation':
-            return new EmissionEvaluation();
-          case 'MatsBulkFile':
-            return new MatsBulkFile();
-        }
-        return false;
-      }),
+      findOne: mockFind,
+
+      findOneBy: mockFind,
 
       save: mockInsertion,
     } as any as EntityManager);

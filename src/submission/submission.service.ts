@@ -33,7 +33,7 @@ export class SubmissionService {
   ) {}
 
   private async ensureRelatedInactivePlansSubmitted(monPlanId: string) {
-    const mp = await this.entityManager.findOne(MonitorPlan, {
+    const mp = await this.returnManager().findOne(MonitorPlan, {
       where: { monPlanIdentifier: monPlanId },
       relations: { locations: true },
     });
@@ -47,7 +47,7 @@ export class SubmissionService {
     const isActive = mp.endRPTPeriodIdentifier === null;
 
     const existsUnsubmittedInactive =
-      (await this.entityManager.countBy(MonitorPlan, {
+      (await this.returnManager().countBy(MonitorPlan, {
         facIdentifier: mp.facIdentifier,
         locations: {
           monLocIdentifier: In(mp.locations.map((loc) => loc.monLocIdentifier)),
