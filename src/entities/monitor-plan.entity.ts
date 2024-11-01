@@ -1,6 +1,16 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorLocation } from './monitor-location.entity';
 import { Plant } from './plant.entity';
 
 @Entity({ name: 'camdecmpswks.monitor_plan' })
@@ -72,11 +82,21 @@ export class MonitorPlan extends BaseEntity {
   @Column({ name: 'eval_status_cd' })
   evalStatusCode: string;
 
-  @ManyToOne(
-    () => Plant,
-    o => o.monitorPlans,
-  )
+  @ManyToOne(() => Plant, (o) => o.monitorPlans)
   @JoinColumn({ name: 'fac_id' })
   plant: Plant;
 
+  @ManyToMany(() => MonitorLocation, (location) => location.plans)
+  @JoinTable({
+    name: 'camdecmpswks.monitor_plan_location',
+    joinColumn: {
+      name: 'mon_plan_id',
+      referencedColumnName: 'monPlanIdentifier',
+    },
+    inverseJoinColumn: {
+      name: 'mon_loc_id',
+      referencedColumnName: 'monLocIdentifier',
+    },
+  })
+  locations: MonitorLocation[];
 }

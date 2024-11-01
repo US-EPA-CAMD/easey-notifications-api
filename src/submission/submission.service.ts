@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { EntityManager, IsNull, MoreThanOrEqual, Not } from 'typeorm';
+import { EntityManager, In, MoreThanOrEqual, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EvaluationItem } from '../dto/evaluation.dto';
@@ -31,6 +31,40 @@ export class SubmissionService {
     private readonly combinedSubmissionMap: CombinedSubmissionsMap,
     private readonly emissionsLastUpdatedMap: EmissionsLastUpdatedMap,
   ) {}
+
+  private async ensureRelatedInactivePlansSubmitted(monPlanId: string) {
+    const mp = await this.entityManager.findOne(MonitorPlan, {
+      where: { monPlanIdentifier: monPlanId },
+      relations: { locations: true },
+    });
+    if (!mp) {
+      throw new EaseyException(
+        new Error('Monitoring plan not found.'),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isActive = mp.endRPTPeriodIdentifier === null;
+
+    const existsUnsubmittedInactive =
+      (await this.entityManager.countBy(MonitorPlan, {
+        facIdentifier: mp.facIdentifier,
+        locations: {
+          monLocIdentifier: In(mp.locations.map((loc) => loc.monLocIdentifier)),
+        },
+        monPlanIdentifier: Not(mp.monPlanIdentifier),
+        submissionAvailabilityCode: Not('UPDATED'),
+      })) > 0;
+
+    if (isActive && existsUnsubmittedInactive) {
+      throw new EaseyException(
+        new Error(
+          'Inactive monitoring plans for at least one of the locations in the current monitoring plan need to be submitted prior to submitting the current, active monitoring plan.',
+        ),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
   returnManager() {
     return this.entityManager;
@@ -171,7 +205,6 @@ export class SubmissionService {
           testExtensionExemptionIdentifier: id,
         });
 
-
         const teeRecord = new SubmissionQueue();
         teeRecord.submissionSetIdentifier = set_id;
         teeRecord.processCode = 'QA';
@@ -250,7 +283,6 @@ export class SubmissionService {
 
         matsRecord.severityCode = 'NONE';
 
-
         await this.returnManager().save(matsRecord);
         if (mf) {
           mf.submissionAvailabilityCode = 'PENDING';
@@ -267,26 +299,13 @@ export class SubmissionService {
 
   async queueSubmissionRecords(params: SubmissionQueueDTO): Promise<void> {
     // Check to make sure the items are ready to be submitted.
-    await Promise.all(params.items.map(async (item) => {
-      // In any facility, inactive plans must be submitted before active plans.
-      const [isActive, existsUnsubmittedInactive] = await Promise.all([
-        (await this.entityManager.countBy(MonitorPlan, {
-          endRPTPeriodIdentifier: IsNull(),
-          monPlanIdentifier: item.monPlanId,
-        })) > 0,
-        (await this.entityManager.countBy(MonitorPlan, {
-          endRPTPeriodIdentifier: Not(IsNull()),
-          submissionAvailabilityCode: Not('UPDATED'),
-        })) > 0,
-      ]);
-      if (isActive && existsUnsubmittedInactive) {
-        throw new EaseyException(
-          new Error('Inactive monitoring plans for at least one of the locations in the current monitoring plan need to be submitted prior to submitting the current, active monitoring plan.'),
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }));
-   
+    await Promise.all(
+      params.items.map(async (item) => {
+        // Inactive plans must be submitted before active plans with common locations.
+        await this.ensureRelatedInactivePlansSubmitted(item.monPlanId);
+      }),
+    );
+
     let promises = [];
 
     for (const item of params.items) {
