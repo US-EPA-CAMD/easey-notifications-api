@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { EntityManager, MoreThanOrEqual } from 'typeorm';
+import { EntityManager, IsNull, MoreThanOrEqual, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EvaluationItem } from '../dto/evaluation.dto';
@@ -265,6 +266,27 @@ export class SubmissionService {
   }
 
   async queueSubmissionRecords(params: SubmissionQueueDTO): Promise<void> {
+    // Check to make sure the items are ready to be submitted.
+    await Promise.all(params.items.map(async (item) => {
+      // In any facility, inactive plans must be submitted before active plans.
+      const [isActive, existsUnsubmittedInactive] = await Promise.all([
+        (await this.entityManager.countBy(MonitorPlan, {
+          endRPTPeriodIdentifier: IsNull(),
+          monPlanIdentifier: item.monPlanId,
+        })) > 0,
+        (await this.entityManager.countBy(MonitorPlan, {
+          endRPTPeriodIdentifier: Not(IsNull()),
+          submissionAvailabilityCode: Not('UPDATED'),
+        })) > 0,
+      ]);
+      if (isActive && existsUnsubmittedInactive) {
+        throw new EaseyException(
+          new Error('Inactive monitoring plans for at least one of the locations in the current monitoring plan need to be submitted prior to submitting the current, active monitoring plan.'),
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }));
+   
     let promises = [];
 
     for (const item of params.items) {
