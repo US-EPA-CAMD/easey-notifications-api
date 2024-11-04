@@ -1,11 +1,12 @@
 import { ApiTags, ApiSecurity, ApiOkResponse, ApiOperation, ApiInternalServerErrorResponse } from '@nestjs/swagger';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { EvaluationDTO } from '../dto/evaluation.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { EvalErrorParamsDTO } from '../dto/eval-error-params.dto';
 import { EvaluationErrorHandlerService } from './evaluation-error-handler.service';
+import { LoggingInterceptor } from '@us-epa-camd/easey-common';
 
 @Controller()
 @ApiTags('Evaluation')
@@ -39,6 +40,7 @@ export class EvaluationController {
     description: 'Sends an email to the user and to ECMPS CAMD support inbox.',
   })
   @ApiInternalServerErrorResponse()
+  @UseInterceptors(LoggingInterceptor)
   async sendEvaluationErrorEmail(@Body() evalErrorParamsDTO: EvalErrorParamsDTO) {
     await this.evaluationErrorHandlerService.sendQueueingErrorEmail(evalErrorParamsDTO);
   }
