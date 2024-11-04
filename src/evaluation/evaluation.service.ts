@@ -32,10 +32,6 @@ export class EvaluationService {
     private readonly evaluationSetHelper: EvaluationSetHelperService,
   ) {}
 
-  /*returnManager(): EntityManager {
-    return this.entityManager;
-  }*/
-
   async queueRecord(
     userId: string,
     userEmail: string,
@@ -43,15 +39,17 @@ export class EvaluationService {
     entityManager: EntityManager,
     queueingStages: { action: string; dateTime: string }[],
   ): Promise<void> {
-
     const evaluationSet = new EvaluationSet();
     let currentEvaluationQueue: Evaluation | null = null;
-    this.logger.log( `Queueing evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${ item?.monPlanId || 'N/A' }, UserId: ${userId || 'N/A'}`, );
+    this.logger.log(
+      `Queueing evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${
+        item?.monPlanId || 'N/A'
+      }, UserId: ${userId || 'N/A'}`,
+    );
     try {
       const currentTime = new Date();
       const evalSetId = uuidv4();
 
-      const evaluationSet = new EvaluationSet();
       evaluationSet.evaluationSetIdentifier = evalSetId;
       evaluationSet.monPlanIdentifier = item.monPlanId;
       evaluationSet.userIdentifier = userId;
@@ -61,7 +59,8 @@ export class EvaluationService {
       // Push queueing stage here
       queueingStages.push({
         action: 'EVAL_SET_ID_ASSIGNED',
-        dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+        dateTime:
+          (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
       });
 
       const locations = await entityManager.query(
@@ -71,14 +70,23 @@ export class EvaluationService {
 
       evaluationSet.configuration = locations[0]['get_mp_location_list'];
 
-      const mp: MonitorPlan = await entityManager.findOneBy(
-        MonitorPlan,
-        { monPlanIdentifier: item.monPlanId },
-      );
+      const mp: MonitorPlan = await entityManager.findOneBy(MonitorPlan, {
+        monPlanIdentifier: item.monPlanId,
+      });
+
+      if (!mp) {
+        throw new Error(`Monitor Plan not found for ID: ${item.monPlanId}`);
+      }
 
       const facility: Plant = await entityManager.findOneBy(Plant, {
         facIdentifier: mp.facIdentifier,
       });
+
+      if (!facility) {
+        throw new Error(
+          `Facility not found for facIdentifier: ${mp.facIdentifier}`,
+        );
+      }
 
       evaluationSet.orisCode = facility.orisCode;
       evaluationSet.facIdentifier = facility.facIdentifier;
@@ -89,13 +97,18 @@ export class EvaluationService {
       // Push queueing stage here
       queueingStages.push({
         action: 'EVAL_SET_SAVED',
-        dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+        dateTime:
+          (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
       });
 
       if (item.submitMonPlan === true) {
-        this.logger.log( `Creating a monitoring plan evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${ item?.monPlanId || 'N/A' }`, );
+        this.logger.log(
+          `Creating a monitoring plan evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${
+            item?.monPlanId || 'N/A'
+          }`,
+        );
 
-        //Create monitor plan queue record
+        // Create monitor plan queue record
         mp.evalStatusCode = 'INQ';
 
         const mpRecord = new Evaluation();
@@ -111,7 +124,8 @@ export class EvaluationService {
         // Push queueing stage here
         queueingStages.push({
           action: 'MP_QUEUED',
-          dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+          dateTime:
+            (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
         });
       }
 
@@ -124,7 +138,9 @@ export class EvaluationService {
         )
         .getMany();
 
-      this.logger.log( `Queueing ${testSumsOrderedList?.length} test summary records.`,);
+      this.logger.log(
+        `Queueing ${testSumsOrderedList?.length} test summary records.`,
+      );
 
       if (testSumsOrderedList?.length) {
         for (const testSummary of testSumsOrderedList) {
@@ -133,11 +149,8 @@ export class EvaluationService {
           currentEvaluationQueue = tsRecord; // Keep reference for error handling
           tsRecord.evaluationSetIdentifier = evalSetId;
           tsRecord.processCode = 'QA';
-          if (item.submitMonPlan === false) {
-            tsRecord.statusCode = 'QUEUED';
-          } else {
-            tsRecord.statusCode = 'PENDING';
-          }
+          tsRecord.statusCode =
+            item.submitMonPlan === false ? 'QUEUED' : 'PENDING';
           tsRecord.testSumIdentifier = testSummary.testSumIdentifier;
           tsRecord.queuedTime = currentTime;
           await entityManager.save(testSummary);
@@ -146,7 +159,8 @@ export class EvaluationService {
           // Push queueing stage here
           queueingStages.push({
             action: 'TEST_QUEUED',
-            dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+            dateTime:
+              (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
           });
         }
       }
@@ -163,13 +177,8 @@ export class EvaluationService {
         currentEvaluationQueue = qceRecord; // Keep reference for error handling
         qceRecord.evaluationSetIdentifier = evalSetId;
         qceRecord.processCode = 'QA';
-
-        if (item.submitMonPlan === false) {
-          qceRecord.statusCode = 'QUEUED';
-        } else {
-          qceRecord.statusCode = 'PENDING';
-        }
-
+        qceRecord.statusCode =
+          item.submitMonPlan === false ? 'QUEUED' : 'PENDING';
         qceRecord.qaCertEventIdentifier = id;
         qceRecord.queuedTime = currentTime;
 
@@ -179,7 +188,8 @@ export class EvaluationService {
         // Push queueing stage here
         queueingStages.push({
           action: 'QCE_QUEUED',
-          dateTime:  (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+          dateTime:
+            (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
         });
       }
 
@@ -195,13 +205,8 @@ export class EvaluationService {
         currentEvaluationQueue = teeRecord; // Keep reference for error handling
         teeRecord.evaluationSetIdentifier = evalSetId;
         teeRecord.processCode = 'QA';
-
-        if (item.submitMonPlan === false) {
-          teeRecord.statusCode = 'QUEUED';
-        } else {
-          teeRecord.statusCode = 'PENDING';
-        }
-
+        teeRecord.statusCode =
+          item.submitMonPlan === false ? 'QUEUED' : 'PENDING';
         teeRecord.testExtensionExemptionIdentifier = id;
         teeRecord.queuedTime = currentTime;
 
@@ -211,11 +216,14 @@ export class EvaluationService {
         // Push queueing stage here
         queueingStages.push({
           action: 'TEE_QUEUED',
-          dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+          dateTime:
+            (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
         });
       }
 
-      this.logger.log( `Queueing emissions with ${item?.emissionsReportingPeriods?.length} reporting period(s).`, );
+      this.logger.log(
+        `Queueing emissions with ${item?.emissionsReportingPeriods?.length} reporting period(s).`,
+      );
 
       for (const periodAbr of item.emissionsReportingPeriods) {
         const rp = await entityManager.findOneBy(ReportingPeriod, {
@@ -253,14 +261,23 @@ export class EvaluationService {
         // Push queueing stage here
         queueingStages.push({
           action: 'EM_QUEUED',
-          dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+          dateTime:
+            (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
         });
       }
 
-      this.logger.log(`Successfully queued evaluation record. evalSetId: ${evalSetId}, MonPlanId: ${ item?.monPlanId || 'N/A' }`, );
-
+      this.logger.log(
+        `Successfully queued evaluation record. evalSetId: ${evalSetId}, MonPlanId: ${
+          item?.monPlanId || 'N/A'
+        }`,
+      );
     } catch (e) {
-      this.logger.error( `Failed to queue evaluation record. MonPlanId: ${ item?.monPlanId || 'N/A' }, Error: ${e.message}`, e.stack, );
+      this.logger.error(
+        `Failed to queue evaluation record. MonPlanId: ${
+          item?.monPlanId || 'N/A'
+        }, Error: ${e.message}`,
+        e.stack,
+      );
       this.logger.error(`Aborting transaction`);
 
       // Attach evaluationSet and currentEvaluationQueue to the error
@@ -272,14 +289,19 @@ export class EvaluationService {
   }
 
   async queueEvaluationRecords(evaluationDTO: EvaluationDTO): Promise<void> {
-    this.logger.log(`Starting to queue evaluation records. UserId: ${ evaluationDTO?.userId || 'N/A' }, Items count: ${evaluationDTO?.items?.length || 0}`, );
+    this.logger.log(
+      `Starting to queue evaluation records. UserId: ${
+        evaluationDTO?.userId || 'N/A'
+      }, Items count: ${evaluationDTO?.items?.length || 0}`,
+    );
 
-    // Build queueingStages array
+    // Build evaluationStages array
     const queueingStages: { action: string; dateTime: string }[] = [];
     // Push queueing stage here
     queueingStages.push({
       action: 'QUEUEING_STARTED',
-      dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+      dateTime:
+        (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
     });
 
     const userId = evaluationDTO.userId;
@@ -305,12 +327,22 @@ export class EvaluationService {
       // Push queueing stage here
       queueingStages.push({
         action: 'QUEUEING_COMPLETED',
-        dateTime: (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
+        dateTime:
+          (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
       });
 
-      this.logger.log( `Finished queueing evaluation records for UserId: ${ evaluationDTO?.userId || 'N/A' }`, );
+      this.logger.log(
+        `Finished queueing evaluation records for UserId: ${
+          evaluationDTO?.userId || 'N/A'
+        }`,
+      );
     } catch (error) {
-      this.logger.error(`Failed to queue evaluation records. UserId: ${ evaluationDTO?.userId || 'N/A' }, Error: ${error.message}`, error.stack, );
+      this.logger.error(
+        `Failed to queue evaluation records. UserId: ${
+          evaluationDTO?.userId || 'N/A'
+        }, Error: ${error.message}`,
+        error.stack,
+      );
 
       // Extract evaluationSet and evaluationQueue from the error
       const evaluationSet = error.evaluationSet;

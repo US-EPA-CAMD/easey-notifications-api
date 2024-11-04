@@ -8,19 +8,28 @@ import { QaTee } from '../entities/qa-tee.entity';
 import { EmissionEvaluation } from '../entities/emission-evaluation.entity';
 import { TestSummary } from '../entities/test-summary.entity';
 import { Plant } from '../entities/plant.entity';
+import { ConfigService } from '@nestjs/config';
+import { ClientConfig } from '../entities/client-config.entity';
 
 @Injectable()
 export class EvaluationSetHelperService {
   constructor(
     private readonly entityManager: EntityManager,
+    private readonly configService: ConfigService
+
   ) {}
+
+  public async getECMPSClientConfig(): Promise<ClientConfig> {
+    return await this.entityManager.findOne(ClientConfig, {
+      where: { name: 'ecmps-ui' },
+    });
+  }
 
   async setRecordStatusCode(
     evaluationSet: EvaluationSet,
     records: Evaluation[],
     statusCode: string,
     note: string,
-    originRecordCode: string,
   ): Promise<void> {
     for (const record of records) {
       record.statusCode = statusCode;
