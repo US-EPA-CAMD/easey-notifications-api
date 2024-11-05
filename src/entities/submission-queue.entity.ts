@@ -39,21 +39,12 @@ export class SubmissionQueue extends BaseEntity {
   @Column({ name: 'severity_cd' })
   severityCode: string;
 
-  @Column({ name: 'queued_time' })
-  queuedTime: Date;
+  @Column({ name: 'submitted_on' })
+  submittedOn: Date;
 
   @Column({ name: 'status_cd' })
   statusCode: string;
 
-  @Column({ name: 'started_time' })
-  startedTime?: Date;
-
-  @Column({ name: 'completed_time' })
-  completedTime?: Date;
-
-  @Column({ name: 'note' })
-  note?: string;
-
-  @Column({ name: 'note_time' })
-  noteTime?: Date;
+  @Column({ name: 'details' })
+  details: string;
 }
