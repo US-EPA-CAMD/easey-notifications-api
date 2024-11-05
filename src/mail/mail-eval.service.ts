@@ -368,35 +368,35 @@ export class MailEvalService {
     templateContext: any,
     attempt: number = 1,
     attachments: object[] = [],
-  ) {
+  ): Promise<void> {
     if (attempt < 3) {
-      this.mailerService
-        .sendMail({
-          to: to, // List of receivers email address
-          cc: cc,
-          from: from,
-          subject: subject, // Subject line
-          template: template,
+      try {
+        const success = await this.mailerService.sendMail({
+          to, // List of receivers email address
+          cc,
+          from,
+          subject,
+          template,
           context: templateContext,
-          attachments: attachments,
-        })
-        .then((success) => {
-          console.log(success);
-        })
-        .catch(async (err) => {
-          await new Promise((r) => setTimeout(r, attempt * 1000 * attempt));
-          console.log('Attempting to send failed email request'); //
-          this.sendEmailWithRetry(
-            to,
-            cc,
-            from,
-            subject,
-            template,
-            templateContext,
-            attempt + 1,
-            attachments
-          );
+          attachments,
         });
+        console.log(success);
+      } catch (err) {
+        // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000 * attempt));
+        console.log('Attempting to send failed email request'); //
+        // Retry sending the email
+        await this.sendEmailWithRetry(
+          to, // List of receivers email address
+          cc,
+          from,
+          subject,
+          template,
+          templateContext,
+          attempt + 1,
+          attachments,
+        );
+      }
     } else {
       throw new EaseyException(
         new Error('Exceeded email attempt retry threshold'),
@@ -404,6 +404,7 @@ export class MailEvalService {
       );
     }
   }
+
 
   async buildEvalReports(
     set: EvaluationSet | SubmissionSet,

@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<style>
-  h1 {text-align: center}
-  h3 {background-color: #005ea2; color: white; padding: 5px;}
-  hr {
-    border-top:4px dotted #000;
-  }
-  .right-align {text-align: right;}
-  .logo {float: left; margin-right: 10px;}
-  .content-section {margin-top: 20px;}
-  .test-header {background-color: #000000;}
-  .code-section {border-top: 1px solid grey; padding:20px}
-  .code-group { flex: 0 1 auto; width: 25%; font-weight: 700; padding-right: 0.5rem }
-  .code-values { flex: 0 1 auto; width: 75% }
-  /*.col-table-container {display: flex; width: 100%}
-    .col-table {flex: 0 1 auto; width: 25%}*/
-  .col-table-container {
-    display: table;
-    width: 100%;
-  }
-  .col-table {
-    display: table-cell;
-    width: auto;
-  }
-  .large-table{font-size: 1.5vw}
-  .larger-table{font-size: 1.2vw}
-  .largest-table{font-size: .8vw}
-  table { font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%; }
-  table td, table th { border: 1px solid #ddd; padding: 8px; }
-  a{padding: 5px; border-left: .5rem solid; font-size: 1.06rem; line-height: 1.5;}
-  h3{margin-top: 25px;}
-  .borderless-table th, .borderless-table td {border: none; }
-</style>
+<head>
+  <title>Submission Feedback Report</title>
+  <style>
+    h1 {text-align: center}
+    h3 {background-color: #005ea2; color: white; padding: 5px;}
+    hr {
+      border-top:4px dotted #000;
+    }
+    .right-align {text-align: right;}
+    .logo {float: left; margin-right: 10px;}
+    .content-section {margin-top: 20px;}
+    .test-header {background-color: #000000;}
+    .code-section {border-top: 1px solid grey; padding:20px}
+    .code-group { flex: 0 1 auto; width: 25%; font-weight: 700; padding-right: 0.5rem }
+    .code-values { flex: 0 1 auto; width: 75% }
+    .col-table-container {
+      display: table;
+      width: 100%;
+    }
+    .col-table {
+      display: table-cell;
+      width: auto;
+    }
+    .large-table{font-size: 1.5vw}
+    .larger-table{font-size: 1.2vw}
+    .largest-table{font-size: .8vw}
+    table { font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%; }
+    table td, table th { border: 1px solid #ddd; padding: 8px; }
+    a{padding: 5px; border-left: .5rem solid; font-size: 1.06rem; line-height: 1.5;}
+    h3{margin-top: 25px;}
+    .borderless-table th, .borderless-table td {border: none; }
+  </style>
+</head>
 <body>
 <div>
   <img class="logo" style="width: 100px; height: 100px;" src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTMxMy41MSAxMzEzLjUxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcC1wYXRoIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNy40MiAtNi40NCkiPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMTMyNi40N3YxMzI2LjQ3SDB6Ii8+PC9jbGlwUGF0aD48c3R5bGU+LmNscy05e2ZpbGw6bm9uZTtzdHJva2Utd2lkdGg6MzBweH0uY2xzLTR7ZmlsbDojMDY2OGIzfS5jbHMtN3tmaWxsOiMyZGEzNDN9LmNscy03LC5jbHMtOXtzdHJva2U6IzJkYTM0M308L3N0eWxlPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcC1wYXRoKSI+PGNpcmNsZSBjeD0iNjU2Ljc2IiBjeT0iNjU2Ljc2IiByPSI2NDEuNzYiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzA2NjhiMyIvPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0iTTg3Ny4zMSA1MjcuMDhjMCAzOS40OC0yNi44NCA3MS41LTU5Ljk0IDcxLjUtMjEuNzkgMC00MC44NS0xMy44Ny01MS4zNS0zNC41OS0xMC41IDIwLjcyLTI5LjU2IDM0LjU5LTUxLjM1IDM0LjU5cy00MS0xNC01MS41MS0zNC45NGMtMTAuNDYgMjAuOTItMjkuNjEgMzQuOTQtNTEuNTEgMzQuOTRTNTcwLjggNTg0LjcxIDU2MC4zIDU2NGMtMTAuNSAyMC43Mi0yOS41NiAzNC41OS01MS4zNSAzNC41OS0zMy4wNiAwLTU5Ljg3LTMxLjk0LTU5Ljk0LTcxLjM3LjA5IDExOC4yMSA5NS45NCAyMTQgMjE0LjE3IDIxNHMyMTQuMTYtOTUuODcgMjE0LjE2LTIxNC4xNXoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIvPjxwYXRoIGQ9Ik01MDkgNTk4LjU4YzIxLjc5IDAgNDAuODUtMTMuODcgNTEuMzUtMzQuNTkgMTAuNSAyMC43MiAyOS41NiAzNC41OSA1MS4zNSAzNC41OXM0MS4wNS0xNCA1MS41MS0zNC45NGMxMC40NiAyMC45MiAyOS42MSAzNC45NCA1MS41MSAzNC45NFM3NTUuNTIgNTg0LjcxIDc2NiA1NjRjMTAuNSAyMC43MiAyOS41NiAzNC41OSA1MS4zNSAzNC41OSAzMy4xIDAgNTkuOTQtMzIgNTkuOTQtNzEuNUg0NDl2LjE3Yy4wOCAzOS4zOCAyNi44OSA3MS4zMiA2MCA3MS4zMnoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIgZmlsbD0iIzJkYTM0MyIvPjxwYXRoIGQ9Ik02NjMuMTggMzEyLjg5QzU0NC45IDMxMi44OSA0NDkgNDA4Ljc4IDQ0OSA1MjcuMDZoMjE0LjE3YTU4LjI1IDU4LjI1IDAgMTE1OC4yNi01OC4yNSA1OC4yNCA1OC4yNCAwIDAxLTU4LjI2IDU4LjI1aDIxNC4xN2MwLTExOC4yOC05NS44OC0yMTQuMTctMjE0LjE2LTIxNC4xN3oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIgZmlsbD0iIzAwOTVkNiIvPjxwYXRoIGNsYXNzPSJjbHMtNyIgZD0iTTEwMjQgOTI3LjgyYTM0MC42NyAzNDAuNjcgMCAwMC0zNzAuNjIgMzAuNjlBMzQwLjY3IDM0MC42NyAwIDAwMTAyNCA5MjcuODJ6IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNy40MiAtNi40NCkiLz48cGF0aCBjbGFzcz0iY2xzLTciIGQ9Ik02NzMgOTU4LjUxYTM0MC42OSAzNDAuNjkgMCAwMC0zNzAuNjMtMzAuNjlBMzQwLjY5IDM0MC42OSAwIDAwNjczIDk1OC41MXoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIvPjxwYXRoIHN0cm9rZS13aWR0aD0iMjciIHN0cm9rZT0iIzJkYTM0MyIgZmlsbD0ibm9uZSIgZD0iTTY1NS43NiA3NTAuNDV2MjYzLjE3Ii8+PHBhdGggY2xhc3M9ImNscy05IiBkPSJNMTAwNC4wNiA2NDQuMzFDODQ2LjcxIDY2NiA3MjAuNTEgNzgyLjEgNjg3Ljc2IDkzMS45M2MxNTkuNDQtMTcuNTUgMjg3LjYzLTEzNS42MSAzMTYuMy0yODcuNjJ6TTMyMi4zIDY0NC4zMWMyOC42NyAxNTIgMTU2Ljg2IDI3MC4wNyAzMTYuMjkgMjg3LjYyQzYwNS44NCA3ODIuMSA0NzkuNjUgNjY2IDMyMi4zIDY0NC4zMXoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIvPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0iTTMzMS40NiAyMzYuNDFxMTAuMzggMTEuNjcgOS43MSAyMy4xdC0xMi4zMyAyMS44MnEtMTEuNjEgMTAuMzQtMjMuMDcgOS42OXQtMjEuODQtMTIuM2wtMzAuNjItMzQuNDEgNS44OC01LjI0IDUuODgtNS4yMyAzMy4xOSAzNy4yOHE1LjI1IDUuOTEgMTEgNi4yNXQxMS43NC00LjkxcTUuOS01LjI1IDYuMjMtMTF0LTQuOTItMTEuNjdsLTMzLjE5LTM3LjI5IDUuODgtNS4yNCA1Ljg4LTUuMjN6TTM3NC4xMiAyNDMuMTZsLTYgMy45LTYgMy45MS00MS40OS02NC4xMiA5LjIxLTYgOS4yMi02IDU0LjU0IDMzLjM1LTMxLjMxLTQ4LjM4IDYtMy45MSA2LTMuOSA0MS41IDY0LjEyLTkuMDggNS44Ny05LjA5IDYtNTUuMTktMzMuNzZ6TTM5NCAxNDIuMmw3LTMuNTYgNy0zLjU1IDM0LjQ3IDY4LjE1LTcgMy41NS03IDMuNTZ6TTQ0OC42NCAxMzBMNDI3IDEzOC40MWwtMi4xNi01LjU0LTIuMTUtNS41MyA1OC0yMi41OSAyLjE2IDUuNTMgMi4xNSA1LjUzLTIxLjY2IDguNDQgMjMuNDEgNjAuMS03LjM0IDIuODYtNy4zNCAyLjg2ek01MTcuMTUgMTczLjYybC0xOC4zNC03NC4xNCA0OC45LTEyLjEgMS40MiA1Ljc3IDEuNDMgNS43Ni0zMy41NiA4LjMyIDQuNTMgMTguMzIgMzEuNDctNy44MSAxLjQzIDUuNzcgMS40MiA1Ljc2LTMxLjU1IDcuODEgNS4yNiAyMS4yMyAzNC41OC04LjU2IDEuNDMgNS43NyAxLjQyIDUuNzZ6TTU2OC43OSA4My4zMmw3LjgyLS44MiAyMi4zMy0yLjM0cTE2Ljk1LTEuNzcgMjcuNTIgNy4zMXQxMi40NCAyNi45M3EyIDE4LjYtNy44IDI5LjQxdC0zMC41MiAxM2wtMTYgMS42OC03LjgyLjgyem0yMi4zOCA2Mi41MWwxMC44My0xLjE0cTExLjktMS4yNCAxNy4zNS04LjU2dDQuMTQtMjAuMTNxLTEuMzItMTIuNTgtOC40My0xOC43MnQtMTguODktNC45MWwtMTAuNDggMS4xek03MzQuNzkgMTAyLjk0YTEwLjc3IDEwLjc3IDAgMDAtMi41Mi04LjQzcS0yLjkyLTMuMjQtOC42MS0zLjg2YTEzLjg0IDEzLjg0IDAgMDAtOS4xMyAxLjc5IDguNDkgOC40OSAwIDAwLTQuMjcgNi41NiA3LjA3IDcuMDcgMCAwMDIuNTkgNi4yMWMyIDEuNzggNS43IDMuODMgMTEuMTggNi4xOGw5LjQxIDRxOS40IDQgMTIuOTQgOXQyLjY3IDEyLjg0YTIxIDIxIDAgMDEtMTAuMzQgMTYuMjRxLTkuMTggNS43Ni0yMi40MiA0LjI5LTE1LjI4LTEuNjgtMjIuMS04LjkzLTYuNjMtNy4wNi01LjI2LTE5LjUzbC4wOC0uNyAxNS40MSAxLjY5cS0xLjA2IDYuNjQgMi40MyAxMC43NWMyLjMyIDIuNzUgNS45IDQuMzggMTAuNzQgNC45MmExNy43NiAxNy43NiAwIDAwMTAuODctMS44NSA5LjA1IDkuMDUgMCAwMDUtNy4xMSA2IDYgMCAwMC0yLTUuMjNxLTIuMzctMi4yLTktNS4wNmwtOS40MS00cS0xMS00Ljc1LTE1LjE5LTkuODV0LTMuMzQtMTIuNzRhMjIuMzUgMjIuMzUgMCAwMTkuNy0xNi42MnE4LjUyLTYgMjAuNzItNC42MSAxMy43MSAxLjUxIDIwLjM2IDguMzQgNi4xNiA2LjI4IDUuMTEgMTUuOGwtLjIzIDEuNjZ6TTc4OC40OCAxMDMuMWwtMjIuNTgtNS41NCAxLjQyLTUuNzcgMS40MS01Ljc5IDYwLjQ2IDE0LjgzLTEuNDEgNS43Ny0xLjQyIDUuNzctMjIuNTgtNS41NC0xNS4zNiA2Mi42NC03LjY1LTEuODgtNy42NS0xLjg3ek04NjAuNzUgMTEyLjI0bDkuMzUgMy42NCA5LjQgMy42Ni0xLjIzIDgxLjQ2LTcuOS0zLjA3LTcuODktMy4wNy44LTE3LjEzTDgzMy4wOSAxNjZsLTEwLjg4IDEzLjItNy43OS0zLTcuODQtM3ptLTE5LjYyIDQ0LjE0bDIyLjcyIDguODQgMS42Ni0zOC4xek05MjUuNDEgMTU0LjE1TDkwNSAxNDNsMi44Ni01LjIxIDIuODUtNS4yIDU0LjU5IDI5LjkxLTIuODUgNS4yLTIuODUgNS4yMS0yMC4zOS0xMS4xNy0zMSA1Ni41Ny02LjktMy43OS02LjkxLTMuNzh6TTkyOS4yNyAyMzAuMzNsNDMuOTQtNjIuNDcgNDEuMiAyOS0zLjQxIDQuODQtMy40MSA0Ljg2LTI4LjMyLTE5LjkzLTEwLjg3IDE1LjQ0IDI2LjYgMTguNy0zLjQyIDQuODYtMy40MSA0Ljg1LTI2LjU4LTE4LjY5TDk0OSAyMjkuNjhsMjkuMTQgMjAuNDktMy40NCA0LjgzLTMuNDEgNC44NnpNMTA0NS4yNiAyNTIuMTlhMTAuNzggMTAuNzggMCAwMDIuOTQtOC4zcS0uNDUtNC4zMy00LjY3LTguMmExMy45NCAxMy45NCAwIDAwLTguNDMtMy45NCA4LjQ5IDguNDkgMCAwMC03LjI5IDIuNzQgNy4wNiA3LjA2IDAgMDAtMS41OCA2LjUzcS44MiAzLjkxIDUuMzggMTEuNTlsNS4yMSA4LjgxcTUuMjIgOC44MSA1LjE0IDE0LjkxdC01LjQyIDExLjkzYTIxIDIxIDAgMDEtMTcuOTQgN3EtMTAuOC0uNzgtMjAuNjItOS43OC0xMS4zNi0xMC4zOC0xMi41Ny0yMC4yNi0xLjE4LTkuNjIgNy4yOC0xOC44NmwuNDgtLjUyIDExLjQzIDEwLjQ2cS00Ljc3IDQuNzQtNC4zOCAxMC4xMnQ1Ljc3IDEwLjNhMTcuNjcgMTcuNjcgMCAwMDkuODYgNC45MyA5LjA4IDkuMDggMCAwMDguMjYtMi43OCA1LjkzIDUuOTMgMCAwMDEuNDMtNS40MnEtLjYtMy4yLTQuMjQtOS4zOGwtNS4yMi04LjhxLTYuMDktMTAuMzUtNi40NS0xNi45MnQ0LjgzLTEyLjI2YTIyLjM1IDIyLjM1IDAgMDExNy42My03LjY5cTEwLjQuMjIgMTkuNDUgOC41MSAxMC4xOCA5LjMxIDExLjUyIDE4Ljc1IDEuMjYgOC43Mi01LjIgMTUuNzdsLTEuMTcgMS4yek0xNDIuODYgNDAwLjE0bDY5LjI4IDMyLjE0TDE5MSA0NzhsLTUuMzktMi41LTUuMzktMi41IDE0LjU3LTMxLjQxLTE3LjEyLTcuOTRMMTY0IDQ2My4xMWwtNS4zOS0yLjUtNS4zOS0yLjUgMTMuNjgtMjkuNDgtMTkuOS05LjItMTUgMzIuMzEtNS4zOC0yLjQ5LTUuMzktMi41ek0xMDguMjUgNDgyLjg5bDIuMDYtNi44OSAyLjA2LTYuODlMMTg1LjU1IDQ5MWwtMy4xNCAxMC41Mi0zLjE0IDEwLjQ4LTYzLjEzIDEwIDU1LjIxIDE2LjQ4LTIgNi44OS0yLjA2IDYuODktNzMuMjMtMjEuODIgMy4wOS0xMC4zNyAzLjEtMTAuMzYgNjMuOS0xMC4xNHpNMTY0LjMgNTYzLjg2bC0xLjEyIDguNS0xLjEyIDguNDktNjEuNDYgMTIuOSA1NiAyOC40LTEgNy43My0xIDcuNzNMODIuNjMgNTk5bDEuMDktOC4yNyAxLjA5LTguMjh6TTE1NS40IDY0Ny4wNWwtLjIxIDcuODctLjIgNy44OC03Ni4zNS0yIC4yLTcuODguMjEtNy44N3pNMTU0LjQ1IDY4MS41N2wuNjIgNy44NCAxLjgxIDIyLjc1cTEuMDYgMTMuNDEtMy40NSAyMXQtMTQuMTEgOC4zM3EtOS42OS43Ni0xNS4yOC02LjUxYTI3LjI1IDI3LjI1IDAgMDEtNC4zNi04Ljg0IDI1Ljg4IDI1Ljg4IDAgMDEtMS40MiA3LjM0Yy0xLjU1IDMuODYtNC43NCA2LjI1LTkuNiA3LjE4cy05LjE4IDEuODctMTIuODcgMi44MWwtMS4xMS4zMWMtMi43Ny43Ni01IDEuNDUtNi43NyAyLjA2YTM1IDM1IDAgMDAtNC44MSAyLjA3bC0uNjYtOC4zMi0uNjYtOC4zMWEyNS42OSAyNS42OSAwIDAxNC4wOC0xLjMzcTIuNi0uNjcgNy41Ny0xLjcybDYuNzMtMS4zM3E3LjUzLTEuNDcgOS43LTMuODV0MS42Ny04Ljc3bC0xLjA2LTEzLjM5LTMwLjkxIDIuNDYtLjYyLTcuODUtLjYyLTcuODV6bS0zMi4xNSAxOC4zNWwuNzggOS43NHEuNjYgOC40NSAzLjgxIDEyLjcxYTguODUgOC44NSAwIDAwOC4zMiAzLjg2IDkuMjIgOS4yMiAwIDAwNy43MS00LjU4cTIuNDctNC4xOCAxLjg5LTExLjU0bC0uOTUtMTEuOXpNOTUuNzcgNzcxcTcuODYtMTEgMjYuODQtMTUuMzZ0MzAuODIgMi4yNHExMS44OCA2LjU1IDE1LjcxIDIzLjR0LTQgMjcuOTFxLTcuODcgMTEtMjYuODMgMTUuMzJ0LTMwLjgzLTIuMjFxLTExLjg2LTYuNTItMTUuNy0yMy40MlQ5NS43NyA3NzF6bTE3LjczIDM4LjA3cTggMy4zNCAyMS4zMy4zM3QxOS4wOC05LjUycTUuODEtNi41IDMuNjUtMTZ0LTEwLjE5LTEyLjhxLTguMDYtMy4zNi0yMS4zMi0uMzVUMTA3IDc4MC4zMXEtNS43OSA2LjUzLTMuNjQgMTZ0MTAuMTQgMTIuNzd6TTExMi44NCA4NjYuNzRsLTIuNjUtNi42OS0yLjY0LTYuNjggNzEtMjguMDkgNCAxMC4yMSA0IDEwLjIxLTQzLjQxIDQ2LjkyIDUzLjU4LTIxLjIgMi42NSA2LjY5IDIuNjQgNi42OC03MSAyOC4wOS00LTEwLjA2LTQtMTAuMDYgNDQtNDcuNDh6TTE0OS4xOSA5NDguNTZsLTMuNzQtNi4xNC0zLjczLTYuMTQgNjUuMjgtMzkuNyA2Ljc4IDExLjE0IDYuODEgMTEuMThMMTc3IDk2NC4wNyAyMzcgOTQ2bDYuNzggMTEuMTQgNi44MSAxMS4xOS02NS4yMSAzOS42Ny0zLjc0LTYuMTQtMy43My02LjE0TDIzOC4yNCA5NTlsLTcwLjM2IDIwLjIzLTQuMzQtNy4xMy00LjMzLTcuMSA0OS45LTUyLjkyek0yMDIuNTggMTAyOS40M0wyNjAuNzYgOTgwbDMyLjY0IDM4LjM2LTQuNTIgMy44NS00LjUzIDMuODUtMjIuNDMtMjYuMzctMTQuMzggMTIuMjMgMjEuMDYgMjQuNzUtNC41MiAzLjg1LTQuNTIgMy44NS0yMS4wNi0yNC43Ni0xNi42NyAxNC4xOCAyMy4wOSAyNy4xMy00LjUyIDMuODUtNC41MyAzLjg0ek0yNjEuODMgMTA5NC4xOGwtNS4zNy00Ljc4LTUuMzctNC43NyA1MC43NS01Ny4wOCA4LjIxIDcuMyA4LjIgNy4zLTE3LjYyIDYxLjQ0IDM4LjI5LTQzLjA2IDUuMzggNC43OCA1LjM3IDQuNzctNTAuNzYgNTcuMDgtOC4wOC03LjE5LTguMDgtNy4xOSAxNy44NC02Mi4xOXpNMzcxLjg0IDEwOTkuODhsLTE5LjQyLTEyLjc4IDMuMjYtNSAzLjI3LTUgNTIgMzQuMjEtMy4yNiA1LTMuMjYgNS0xOS40My0xMi43OC0zNS40NSA1My44OS02LjU4LTQuMzMtNi41Ny00LjMzek00MzQuMjIgMTEyM2w5IDQuMzYgOS4wOSA0LjM4LTcuNjIgODEuMTMtNy42My0zLjY4LTcuNjMtMy42OCAyLjE1LTE3LTI5LjE4LTE0LjA4LTExLjg4IDEyLjMxLTcuNTMtMy42My03LjU3LTMuNjZ6bS0yMyA0Mi40N2wyMiAxMC41OSA0LjY1LTM3Ljg1ek00NjQuODEgMTIxOS42NmwyMy4zNS03Mi43MiA3LjUgMi40MSA3LjQ5IDIuNDEtMTkuNzIgNjEuNDEgMzAuMzUgOS43NC0xLjgxIDUuNjYtMS44MiA1LjY1ek01NzkuNjkgMTE3MS4zOGw3LjgxLjkzIDIxLjI3IDIuNTFxMTIuNTYgMS40OCAxOC41MSA4LjM0dDQuNjIgMTguMjRxLTEuMzYgMTEuNTMtOS4yMiAxNi42M3QtMjEuOCAzLjQ0bC0xMS4wOS0xLjMxLTMuNDIgMjguOTItNy44Mi0uOTItNy44Mi0uOTN6bTExLjQ5IDM3bDguNTggMXE3LjQ0Ljg3IDExLjc3LTEuNjdhMTAuMjEgMTAuMjEgMCAwMDUtOC4xM3EuNjgtNS42NC0yLjQ2LTkuMXQtOS41OS00LjIxbC0xMC41NC0xLjI3ek02NDcuMyAxMTc4LjI3bDcuODYtLjE2IDIyLjgyLS40NXExMy40Ni0uMjcgMjAuNzMgNC42OXQ3LjQ3IDE0LjU4cS4yIDkuNzItNy40IDE0Ljg3YTI3LjM1IDI3LjM1IDAgMDEtOS4wOCAzLjgyIDI1LjY3IDI1LjY3IDAgMDE3LjI0IDEuODZxNS42NCAyLjY1IDYuNiAxMHQyLjA1IDEzbC4yNCAxLjEzcS44OCA0LjIxIDEuNjUgNi44N2EzNC42NiAzNC42NiAwIDAwMS43OCA0LjkzbC04LjM0LjE2LTguMzQuMTdhMjYuMSAyNi4xIDAgMDEtMS4wOS00LjE1cS0uNTEtMi42NC0xLjI2LTcuNjVsLS45My02LjhxLTEtNy42Mi0zLjI3LTkuOTJ0LTguNjUtMi4xOWwtMTMuNDMuMjcuNjIgMzEtNy44OC4xNS03Ljg3LjE2em0xNi40MSAzMy4xOGw5Ljc3LS4ycTguNDctLjE2IDEyLjkyLTNhOC45IDguOSAwIDAwNC4zNS04LjA5IDkuMjIgOS4yMiAwIDAwLTQuMTMtOHEtNC0yLjcyLTExLjQtMi41N2wtMTEuOTMuMjR6TTc0MC4xNyAxMjQxLjNxLTEwLjY1LTguMzgtMTQtMjcuNTV0My43Mi0zMC42OHE3LjExLTExLjUzIDI0LjEyLTE0LjU2dDI3LjY5IDUuMzdxMTAuNjIgOC40IDE0IDI3LjU0dC0zLjcgMzAuNjlxLTcuMSAxMS41NC0yNC4xNSAxNC41NXQtMjcuNjgtNS4zNnptMzguODgtMTUuODlxMy43NC03Ljg2IDEuMzUtMjEuMjh0LTguNTktMTkuNTFxLTYuMjEtNi4xMi0xNS43Ny00LjQydC0xMy4yNyA5LjU3cS0zLjc2IDcuODgtMS4zOCAyMS4yOHQ4LjYxIDE5LjUycTYuMjQgNi4wOSAxNS43NSA0LjR0MTMuMy05LjU2ek04MjAuNzEgMTE2NmwtMjIuMDggNy4yOC0xLjg2LTUuNjQtMS44Ni01LjYzIDU5LjA5LTE5LjQ4IDEuODYgNS42NCAxLjg2IDUuNjMtMjIuMDggNy4yOSAyMC4yMiA2MS4yNS03LjQ4IDIuNDctNy40OCAyLjQ3ek05MDAuMzkgMTIwNS4zOGwtMzMuNTctNjguNTkgNDUuMjQtMjIuMTUgMi42MSA1LjMzIDIuNjEgNS4zNC0zMS4xIDE1LjIyIDguMyAxNyAyOS4xOS0xNC4yOSAyLjYxIDUuMzQgMi42MSA1LjMzLTI5LjE5IDE0LjI5IDkuNjIgMTkuNjQgMzItMTUuNjYgMi42MSA1LjM0IDIuNjEgNS4zM3pNMTAwMi41MSAxMTE3cTYuNzIgOS4xNSAzLjM1IDIwLjY0dC0xNSAxOS4yM3EtMTQgOS4zLTI2LjkgNS43M3QtMjMuNjUtMTkuNzhxLTEwLjc1LTE2LjItOC44NC0yOS42NHQxNi4zMi0yM3ExMS4xNS03LjQxIDIyLjU2LTYgMTAuODkgMS4zMiAxNi41MiA5Ljg5bC42MyAxLTEyLjkxIDguNTdxLTQuMjEtNS4yNS05Ljc3LTZ0LTExLjMyIDMuMDdxLTcuNjUgNS4wOC03LjczIDEzLjY3dDcuNDUgMTkuOTNxNy41NCAxMS4zNCAxNS41NiAxNC41MnQxNS44My0ycTYtNCA3LjMxLTkuNTZ0LTIuMjktMTEuNjN6TTEwMDMuMTcgMTA2NWwtMTcuNDUgMTUuMzYtMy45Mi00LjQ1LTMuOTItNC40NiA0Ni43Mi00MS4xNCAzLjkyIDQuNDYgMy45MiA0LjQ2LTE3LjQ0IDE1LjM0IDQyLjYyIDQ4LjQxLTUuOTEgNS4yLTUuOTEgNS4yMXpNMTAzMi4zNSAxMDIxLjE1bDUuMzctNS43NiA1LjM2LTUuNzcgNTUuODggNTIuMDctNS4zNiA1Ljc2LTUuMzcgNS43NnpNMTExMy4xOCAxMDMyLjc3cS0xMy40OCAxLjIzLTI5LjEzLTEwLjM2dC0xOC4zOS0yNC44NHEtMi43Ni0xMy4yNyA3LjUyLTI3LjE2dDIzLjgtMTUuMTNxMTMuNDktMS4xOCAyOS4xMSAxMC4zOHQxOC40MSAyNC44M3EyLjc3IDEzLjI1LTcuNTQgMjcuMTd0LTIzLjc4IDE1LjExem0xNy4zMy0zOC4yNnEtMi43LTguMjgtMTMuNjUtMTYuNHQtMTkuNjUtOC4yN3EtOC43LS4xNy0xNC40OSA3LjY0dC0zLjA3IDE2LjA3cTIuNjggOC4zIDEzLjYzIDE2LjR0MTkuNjcgOC4yNnE4LjcxLjE1IDE0LjQ3LTcuNjJ0My4wOS0xNi4wOHpNMTE3Ni43NyA5NTMuODNsLTMuMzEgNi4zOC0zLjMxIDYuMzgtNjcuOC0zNS4xOCA1LjA2LTkuNzQgNS4wNi05Ljc1IDYzLjg5IDItNTEuMTUtMjYuNTQgMy4zMS02LjM4IDMuMzEtNi4zOCA2Ny43OSAzNS4xOC01IDkuNi01IDkuNjFMMTEyNSA5Mjd6TTExNTUuMTYgODA3LjRsMi41NC05LjcxIDIuNTUtOS43NiA4MS4wNy04LjE3LTIuMTQgOC4xOS0yLjE0IDguMi0xNy4xMSAxLjE4LTguMTkgMzEuMzQgMTQuMzcgOS4yOUwxMjI0IDg0NmwtMi4xMiA4LjE0em00Ni4xMSAxNC4zOWw2LjE2LTIzLjU4LTM4IDIuNzR6TTEyNDguODUgNzMxLjA5cS0yLjI4IDE5LjYtMTMuNSAyOC42NHQtMzAuNTQgNi44cS0xOC4xMy0yLjEyLTI3LjYxLTEzLjUydC03LjQ3LTI4LjcxcTEuNzMtMTQuOTEgOS4xNy0yMS44M3QyMC4xNy01LjQ0bC0xLjc5IDE1LjM5Yy00LjkyLS40OS04LjYyLjMzLTExLjEzIDIuNDZzLTQuMDUgNS43OS00LjY0IDEwLjk0cS0xLjIzIDEwLjU5IDUuMyAxNy4xOHQxOS43OSA4LjEzcTEzLjUzIDEuNTYgMjEuMjUtMy41NHQ5LTE2LjQ3YTU0LjE2IDU0LjE2IDAgMDAtLjI2LTEzLjE5TDEyMTkuOSA3MTZsLTEuNjkgMTQuNTQtMTEuOC0xLjM3IDMuNTEtMzAuMiAzNy44OSA0LjRhOTEuNzQgOTEuNzQgMCAwMTEuMDQgMjcuNzJ6TTEyNTEuMDYgNjc3LjU3bC03Ni4zNSAxLjg3LTEuMjQtNTAuMzYgNS45NC0uMTUgNS45NC0uMTQuODQgMzQuNjEgMTguODctLjQ2LS43OS0zMi40OSA1LjkzLS4xNCA1Ljk0LS4xNS43OSAzMi40OSAyMS44Ny0uNTMtLjg3LTM1LjYyIDUuOTQtLjE0IDUuOTMtLjE1ek0xMjQ1LjM1IDU4N2wxLjIxIDcuMDkgMS4yIDcuMDgtNzUuMjkgMTIuODMtMS44NC0xMC44Mi0xLjg0LTEwLjgzIDUyLjE1LTM2Ljk1LTU2LjggOS42OC0xLjIxLTcuMDgtMS4yMS03LjA5TDEyMzcgNTM4bDEuODIgMTAuNjcgMS44MiAxMC42Ni01Mi44IDM3LjM5ek0xMTg3LjI5IDQ2MS43N3ExMC42MS00IDIwLjc4IDIuMjh0MTQuNTIgMTkuNjNxNS4yMiAxNi0xLjY2IDI3LjQ1dC0yNS4zNyAxNy41cS0xOC40OCA2LTMwLjkyLjYydC0xNy44MS0yMS44N3EtNC4xNS0xMi43NC4yNS0yMy4zNSA0LjE3LTEwLjE0IDEzLjkzLTEzLjI4bDEuMDktLjM1IDQuODEgMTQuNzNjLTQuMTIgMS43Ny02LjkzIDQuMzctOC40IDcuODFzLTEuNSA3LjM1LS4wNyAxMS43MnEyLjg1IDguNzQgMTEuMTEgMTEuMTF0MjEuMi0xLjg3cTEyLjk1LTQuMjMgMTguMTUtMTEuMTF0Mi4yOC0xNS43OWMtMS40OC00LjU2LTMuOTEtNy43Ni03LjI2LTkuNnMtNy4yOS0yLjE0LTExLjgyLS45ek0xMTY3LjQ4IDQyOWwtMzAuMSA0NS4xNi00LjItOC41LTQuMi04LjQ5IDIyLjcyLTMwLjY4LTM3Ljk0LS4yMy0zLjY3LTcuNDQtMy42OC03LjQzIDU0LjE0IDMuNDYgMjYuMzQtMTMgMy40OSA3LjA2IDMuNDkgNy4wNnoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03LjQyIC02LjQ0KSIvPjxjaXJjbGUgY2xhc3M9ImNscy00IiBjeD0iMTA4OS41NCIgY3k9IjMzMi45NiIgcj0iMjIiLz48Y2lyY2xlIGNsYXNzPSJjbHMtNCIgY3g9IjIxNS41NCIgY3k9IjMzNi45NiIgcj0iMjIiLz48L2c+PC9zdmc+Cg==" alt="EPA Logo">
@@ -41,7 +42,7 @@
       <br> <b >{{monitorPlan.item.submissionDateDisplay}}</b>
     </p>
   </div>
-</div> {{monitorPlan.item.facilityName}} 
+</div>
 
 <div class="content-section">
   <p>Re: {{monitorPlan.item.facilityName}} ({{monitorPlan.item.orisCode}}) - {{monitorPlan.item.unitStackPipe}}</p>
@@ -98,118 +99,38 @@
 
     {{/unless}}
   </p>
+
   <h3>Table 1: Submission Receipt and Feedback Status Level Information</h3>
   <div class="col-table-container">
     <table class="col-table">
-      {{{submissionReceiptTableContent}}}
+      {{#each submissionReceiptData}}
+        <tr>
+          <td>{{this.key}}</td>
+          <td>
+            {{#if (isObject this.value)}}
+              {{#if this.value.url}}
+                <a href="{{this.value.url}}">{{this.value.label}}</a>
+              {{else}}
+                {{this.value.label}}
+              {{/if}}
+            {{else}}
+              {{this.value}}
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
     </table>
   </div>
 
   <h3>Explanation of Your Feedback Status Level Listed in Table 1</h3>
 
-  {{#if (eq severityLevelCode "CRIT1")}}
-    <p>
-      This submission has failed one or more "Critical Level 1" checks performed by ECMPS. These errors are listed as "CRIT1" severity-level errors in the Evaluation Results at the end of the Feedback Report.
-      {{#if (eq processCode "EM")}}
-        NOTE: Due to the "Critical Level 1" error status, the ECMPS submission access window remains OPEN for this emissions report, so you should be able to resubmit the data once corrections have been made. For more information please see the QUESTIONS guidance, below.
-      {{/if}}
-    </p>
-
-    <p>
-      A "Critical Level 1" error indicates that there is a problem with the way the data are reported (such as uses of inconsistent or erroneous codes, or
-      listing data for an undefined component ID). It should be possible to resolve these errors by correcting the reported data. All "Critical Level 1"
-      errors must be corrected before the data will be processed and loaded into ECMPS. Furthermore, any monitoring plan, QA/certification test, or
-      emissions data submissions that are dependent upon the data in this submission will not be processed by the EPA until you correct the
-      "Critical Level 1" errors in this submission. You must correct all "Critical Level 1" errors and resubmit the data to the EPA as soon as possible, no
-      later than 30 days after the original submission deadline (or the following business day, if the 30th day falls on a holiday or weekend).
-    </p>
-    <p>
-      Note that the Evaluation Results may also list "Critical Level 2" errors if this submission also failed one or more of the "Critical Level 2" checks
-      performed by ECMPS. Although "Critical Level 2" errors may be caused by incorrect reporting, these errors appear to represent deviations from
-      the Agency rules and policies. You must correct all "Critical Level 2" errors and resubmit the revised data to the EPA as soon as possible, no later
-      than 30 days after the original submission deadline (or the following business day, if the 30th day falls on a holiday or weekend).
-    </p>
-    <p>
-      In addition, please investigate any Non-Critical errors, and/or Informational Messages that may be listed in the Evaluation Results. If any of these
-      errors or messages indicate a reporting problem, EPA strongly encourages you to also correct the problem(s) before resubmitting the data.
-    </p>
-
-  {{else if (eq severityLevelCode "CRIT2")}}
-    <p>
-      This submission has failed one or more "Critical Level 2" checks performed by ECMPS. These errors are listed as "CRIT2" severity-level errors
-      in the Evaluation Results at the end of this Feedback Report.
-      {{#if (eq processCode "EM")}}
-        NOTE: Due to the "Critical Level 2" error status, the ECMPS submission access window remains OPEN for this emissions report, so you should be able to resubmit the data once corrections have been made. For more information, please see the QUESTIONS guidance below.
-      {{/if}}
-    </p>
-    <p>
-      Although "Critical Level 2" errors may be caused by incorrect reporting, they appear to represent deviations from the Agency rules and policies.
-      While this {{processCodeName}} submission has been processed and loaded into ECMPS, you must correct all "Critical Level 2" errors and resubmit the
-      data to the EPA as soon as possible, no later than 30 days after the original submission deadline (or the following business day, if the 30th day
-      falls on a holiday or weekend).
-    </p>
-    <p>
-      In addition, please investigate any Non-Critical errors and/or Informational Messages that may be listed in the Evaluation Results. If any of these
-      errors or messages indicate a reporting problem, the EPA strongly encourages you to also correct the problem(s) before resubmitting the data.
-    </p>
-
-  {{else if (eq severityLevelCode "ADMNOVR")}}
-    <p>
-      The EPA has accepted your {{processCodeName}} submission. ECMPS detected errors in your data based on the checks performed; however, the
-      Evaluation Results at the end of this Feedback Report indicate that one or more of the errors have been "Administratively Overridden." Errors that
-      have been administratively overridden by EPA do not require a resubmission or any further action; they are listed in the evaluation results portion
-      of the feedback for informational purposes only.
-      {{#if (eq processCode "EM")}}
-        NOTE: The ECMPS submission access window for this emissions report has been closed. If you need to resubmit this data, please see the guidance on data resubmissions below.
-      {{/if}}
-    </p>
-
-  {{else if (eq severityLevelCode "NONCRIT")}}
-    <p>
-      The EPA has accepted your {{processCodeName}} submission. However, this submission has failed one or more "Non-Critical" checks performed by
-      ECMPS. These errors are listed as "NONCRIT" severity-level errors in the Evaluation Results at the end of this Feedback Report.
-    </p>
-    <p>
-      The "Non-Critical" errors are usually problems that may result in small calculation errors or other possible reporting errors that may have minimal
-      impact on interpretation of the {{processCodeName}} and no obvious implication for other data (
-      {{#if (eq processCode "MP")}}
-        QA and/or emissions data
-      {{else if (eq processCode "QA")}}
-        MP and/or emissions data
-      {{else}}
-        MP and/or QA/Cert data
-      {{/if}}
-      ).
-      If any of these errors indicate a
-      problem in the reported data, the EPA strongly encourages you to correct the problem(s) and resubmit the data; however, correction of these errors
-      is not required at this time.
-    </p>
-
-  {{else if (eq severityLevelCode "INFORM")}}
-    <p>
-      The EPA has accepted your {{processCodeName}} submission. ECMPS detected no errors in your data based on the checks performed; however,
-      the Evaluation Results at the end of this Feedback Report contain one or more Informational Messages. If any of the Informational Messages
-      indicate a reporting problem, the EPA strongly encourages you to correct the problem(s) and resubmit the data.
-      {{#if (eq processCode "EM")}}
-        NOTE: the ECMPS submission access window for this Emissions report has been closed. If you need to resubmit this data, please see the guidance on data resubmissions below.
-      {{/if}}
-    </p>
-
-  {{else if (eq severityLevelCode "NONE")}}
-    <p>
-      The EPA has accepted your {{processCodeName}} submission. ECMPS detected no errors in your data based on the checks performed.
-      {{#if (eq processCode "EM")}}
-        NOTE: The ECMPS submission access window for this emissions report has been closed. If you need to resubmit this data, please see the guidance on data resubmissions below.
-      {{/if}}
-    </p>
-
-  {{/if}}
+  {{> (lookup . 'severityLevelCode') }}
 
   <h3>Other Information and Bulletins from EPA</h3>
   <p>
     QUESTIONS: Please contact your EPA Analyst listed in Table 1 with any questions regarding this correspondence, this submission, and/or the
     evaluation results. If you need assistance with correcting problems in the {{processCodeName}} for this facility, or if you need to resubmit data, please
-    send an e-mail to ECMPS Technical Support at: ecmps-support@camdsupport.com.
+    send an e-mail to ECMPS Technical Support at: <a href="mailto:ecmps-support@camdsupport.com">ecmps-support@camdsupport.com</a>.
   </p>
 
   {{#if (eq processCode "MP")}}
@@ -220,14 +141,14 @@
 
   <p>
     ECMPS Data Reporting Instructions: For detailed information about reporting Monitoring Plan, QA/Certification Test, and Emissions data, please
-    see the ECMPS Reporting Instructions on the EPA's website at: <a href="https://www.epa.gov/power-sector/ecmps-reporting-instructions"> https://www.epa.gov/power-sector/ecmps-reporting-instructions.</a>
+    see the ECMPS Reporting Instructions on the EPA's website at: <a href="https://www.epa.gov/power-sector/ecmps-reporting-instructions">https://www.epa.gov/power-sector/ecmps-reporting-instructions</a>.
   </p>
   <p>Thank you for your attention to this matter.</p>
 
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <div>
       <p>Facility Name: {{monitorPlan.item.facilityName}}</p>
-      <p>Facility ID (ORISPL): {{monitorPlan.item.orisCode}} State: {{monitorPlan.item.stateCode}} </p>
+      <p>Facility ID (ORISPL): {{monitorPlan.item.orisCode}} State: {{monitorPlan.item.stateCode}}</p>
     </div>
     <div class="right-align">
       <p>ECMPS Feedback</p>
@@ -235,10 +156,17 @@
     </div>
   </div>
 
-  {{{emissionSummaryContent}}}
+  {{#if (and (eq processCode "EM") emissionSummaryContent)}}
+    <h3>Table 2: Cumulative Data Summary -- EPA-Accepted Values</h3>
+    {{{emissionSummaryContent}}}
+  {{/if}}
 
-  {{{qaFeedbackContent}}}
+  {{#if (and (eq processCode "QA") qaFeedbackContent)}}
+    <h3>Table 2: List of Tests, Certification Events, and Extension/Exemptions</h3>
+    {{{qaFeedbackContent}}}
+  {{/if}}
 
+  <!-- Include evaluation reports if there are errors -->
   {{#if hasNonNoneSeverity}}
     {{{evaluationReportsContent}}}
   {{/if}}

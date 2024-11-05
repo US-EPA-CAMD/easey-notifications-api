@@ -5,7 +5,6 @@ import { DataSetService } from '../dataset/dataset.service';
 import { ReportDTO } from '../dto/report.dto';
 import { ReportColumnDTO } from '../dto/report-column.dto';
 import { ReportDetailDTO } from '../dto/report-detail.dto';
-import { KeyValuePairs } from '../dto/submission-email-params.dto';
 import { SubmissionFeedbackRecordService } from './submission-feedback-record.service';
 
 describe('-- Submission Feedback Record Service --', () => {
@@ -58,10 +57,11 @@ describe('-- Submission Feedback Record Service --', () => {
 
     const result = service.generateSummaryTableForUnitStack(reportDTO, 'USP001');
     expect(result).toContain('Unit/Stack/Pipe ID: USP001');
-    expect(result).toContain('<th> Column 1 </th>');
-    expect(result).toContain('<th> Column 2 </th>');
-    expect(result).toContain('<td> value1 </td>');
-    expect(result).toContain('<td> value2 </td>');
+    expect(result).toContain('<th>Column 1</th>');
+    expect(result).toContain('<th>Column 2</th>');
+    expect(result).toContain('<td>value1</td>');
+    expect(result).toContain('<td>value2</td>');
+
   });
 
   it('should add default table', () => {
@@ -77,22 +77,9 @@ describe('-- Submission Feedback Record Service --', () => {
 
     const result = service.addTable(columns, detail, 'Unit/Stack/Pipe ID: USP001');
     expect(result).toContain('Unit/Stack/Pipe ID: USP001');
-    expect(result).toContain('<th> Column 1 </th>');
-    expect(result).toContain('<th> Column 2 </th>');
-    expect(result).toContain('<td> value1 </td>');
-    expect(result).toContain('<td> value2 </td>');
-  });
-
-  it('should get submission receipt table content', () => {
-    const pairs: KeyValuePairs = {
-      'Key 1': 'Value 1',
-      'Key 2': 'Value 2',
-    };
-
-    const result = service.getSubmissionReceiptTableContent(pairs);
-    expect(result).toContain('<td>Key 1</td>');
-    expect(result).toContain('<td>Value 1</td>');
-    expect(result).toContain('<td>Key 2</td>');
-    expect(result).toContain('<td>Value 2</td>');
+    expect(result).toContain('<th>Column 1</th>');
+    expect(result).toContain('<th>Column 2</th>');
+    expect(result).toContain('<td>value1</td>');
+    expect(result).toContain('<td>value2</td>');
   });
 });

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <title>Submission Processing Error - Support Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      color: #005ea2;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .content {
+      margin-top: 20px;
+    }
+    .error-details {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ddd;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="content">
+  <p>Dear ECMPS Support Team,</p>
+  <p>
+    An error occurred while processing a submission.
+  </p>
+  <p>
+    <strong>Submission ID:</strong> {{submissionId}}<br>
+    <strong>Oris Code:</strong> {{orisCode}}<br>
+    <strong>Location:</strong> {{configuration}}<br>
+    <strong>Year/Quarter:</strong> {{yearQtr}}<br>
+    <strong>Date/Time:</strong> {{submissionDateDisplay}}<br>
+  </p>
+  <p>
+    <strong>Submitter:</strong> {{submitter}}<br>
+  </p>
+  <p>
+    <strong>SUBMISSION_STAGE_LOG Data:</strong>
+  </p>
+  <p>
+    {{#each stages}}
+      <strong>{{action}}:</strong> {{dateTime}}<br>
+    {{/each}}
+  </p>
+  <p>
+    <strong>ECMPS_ERROR_LOG Data:</strong>
+  </p>
+  <p>
+    <strong>Error ID:</strong> {{errorId}}<br>
+    <strong>Error Message:</strong> {{errorMessage}}<br>
+    <strong>Error Backtrace:</strong> {{errorDetails}}<br>
+    <strong>Argument Values:</strong> {{argumentValues}}<br>
+    <strong>Error Date:</strong> {{errorDate}}<br>
+  </p>
+
+</div>
+</body>
+</html>
