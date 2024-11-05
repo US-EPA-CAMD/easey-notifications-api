@@ -814,11 +814,11 @@ export class SubmissionProcessService {
     const recipientsListApiEnabled = this.configService.get<boolean>('app.recipientsListApiEnabled');
 
     submissionEmailParamsDto.ccEmail = recipientsListApiEnabled ? await this.recipientListService.getEmailRecipients(
-      'SUBMISSIONCONFIRMATION',
-      submissionEmailParamsDto.facId,
       submissionSet.userIdentifier,
       submissionEmailParamsDto.processCode,
-      false
+      '',
+      'SUBMISSIONCONFIRMATION',
+      submissionEmailParamsDto.facId?.toString(),
     ) : '';
 
     //Set to and cc emails

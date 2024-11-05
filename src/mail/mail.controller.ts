@@ -16,7 +16,6 @@ import { ProcessMailDTO } from '../dto/process-mail.dto';
 import { MassEvalParamsDTO } from '../dto/mass-eval-params.dto';
 import { MailTemplateService } from './mail-template.service';
 import { MailEvalService } from './mail-eval.service';
-import { RecipientPayloadDTO } from '../dto/recipient-payload.dto';
 
 @Controller()
 @ApiTags('Support')
@@ -73,17 +72,5 @@ export class MailController {
       payload.fromEmail,
       payload.evaluationSetId
     );
-  }
-
-  @Post('email/emailRecipientList')
-  async getRecipientList(@Body() payload: RecipientPayloadDTO) {
-    return {
-      recipientList: [
-        {
-          emailAddressList: ['kyleherceg@gmail.com'],
-          plantIdList: payload.plantIdList,
-        },
-      ],
-    };
   }
 }
