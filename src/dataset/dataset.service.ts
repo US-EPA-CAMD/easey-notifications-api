@@ -131,7 +131,6 @@ export class DataSetService {
         if (params.testId.length === 1) return params.testId[0];
         else return testId;
       }
-
       return params[param.name] ?? param.defaultValue;
     });
 
