@@ -147,15 +147,16 @@ export class SubmissionEmailService {
 
     await this.setCommonParams(submissionEmailParamsDto);
 
-    submissionEmailParamsDto.ccEmail = this.configService.get<boolean>('app.recipientsListApiEnabled',)
-      ? await this.recipientListService.getEmailRecipients(
-        'SUBMISSIONCONFIRMATION',
-        submissionEmailParamsDto.facId,
-        submissionSet.userIdentifier,
-        submissionEmailParamsDto.processCode,
-        false,
-      )
-      : '';
+    //Get the recipients list from the recipient's list API
+    const recipientsListApiEnabled = this.configService.get<boolean>('app.recipientsListApiEnabled');
+
+    submissionEmailParamsDto.ccEmail = recipientsListApiEnabled ? await this.recipientListService.getEmailRecipients(
+      submissionSet.userIdentifier,
+      submissionEmailParamsDto.processCode,
+      '',
+      'SUBMISSIONCONFIRMATION',
+      submissionEmailParamsDto.facId?.toString(),
+    ) : '';
 
     submissionEmailParamsDto.templateContext['toEmail'] = submissionEmailParamsDto.toEmail;
     submissionEmailParamsDto.templateContext['ccEmail'] = submissionEmailParamsDto.ccEmail;
