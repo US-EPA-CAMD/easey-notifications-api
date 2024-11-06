@@ -85,6 +85,8 @@ export class RecipientListService {
 
     const headers = {
       'x-api-key': this.configService.get<string>('app.apiKey'),
+      'x-client-id': this.configService.get<string>('app.clientId'),
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${clientToken}`,
     };
 
@@ -97,7 +99,6 @@ export class RecipientListService {
     };
 
     this.logger.debug('Making API call to:', { url: recipientsListApiUrl });
-    this.logger.debug('Request body:', { body: body });
 
     const allowLegacyRenegotiationforNodeJsOptions = {
       httpsAgent: new https.Agent({
@@ -105,14 +106,29 @@ export class RecipientListService {
       }),
     };
 
+    // This request is a bit unconventional.  The CBS API expects a GET request with a body.
+    // Axios does not support this, so we are using the httpService.request method
     try {
+
       const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.post(recipientsListApiUrl, body, { headers, ...allowLegacyRenegotiationforNodeJsOptions }),
+        this.httpService.request({
+          method: 'GET',
+          url: recipientsListApiUrl,
+          headers: headers,
+          data: body,
+          ...allowLegacyRenegotiationforNodeJsOptions,
+        }),
       );
 
       if (!response.data || !Array.isArray(response.data)) {
         this.logger.error('Invalid response format from emailRecipients API', response.data);
         return '';
+      }
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        this.logger.debug('First item of the email list: ', response.data[0]);
+      } else {
+        this.logger.debug('response.data is is empty.');
       }
 
       const emailList = response.data
@@ -128,6 +144,7 @@ export class RecipientListService {
         this.logger.error('API response error status:', error.response.status || '');
         this.logger.error('API response error data:', error.response.data || '');
       }
+
       return '';
     }
   }

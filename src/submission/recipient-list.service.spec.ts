@@ -20,13 +20,27 @@ describe('RecipientListService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(), // Mocking this will allow us to control what configService.get returns
+            get: jest.fn().mockImplementation((key: string) => {
+              if (key === 'app.recipientsListApi') {
+                return 'http://mock-recipients-list-api.com';
+              } else if (key === 'app.apiKey') {
+                return 'mockApiKey';
+              } else if (key === 'app.clientId') {
+                return 'mockClientId';
+              } else if (key === 'app.authApi.uri') {
+                return 'http://mock-auth-api.com';
+              } else if (key === 'app.clientSecret') {
+                return 'mockClientSecret';
+              }
+              return null;
+            }),
           },
         },
         {
           provide: HttpService,
           useValue: {
-            post: jest.fn(), // We'll mock this later
+            post: jest.fn(),
+            request: jest.fn(),
           },
         },
         {
@@ -68,7 +82,7 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' as any },
+        config: { method: 'post' },
       };
 
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
@@ -83,7 +97,7 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' as any },
+        config: { method: 'post' },
       };
 
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
@@ -99,21 +113,15 @@ describe('RecipientListService', () => {
 
       const result = await service.getClientToken();
       expect(result).toEqual('');
+      expect(logger.error).toHaveBeenCalledWith(
+        'Error occurred during the API call to auth-api token validation API',
+        expect.any(Error),
+      );
     });
   });
 
   describe('getEmailRecipients', () => {
     it('should return a list of email recipients', async () => {
-      // Mocking the configService.get call to return a valid recipientsListApi URL
-      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
-        if (key === 'app.recipientsListApi') {
-          return 'http://mock-recipients-list-api.com';
-        } else if (key === 'app.apiKey') {
-          return 'mockApiKey';
-        }
-        return null;
-      });
-
       const mockRecipients = [
         { emailAddressList: 'email1@example.com' },
         { emailAddressList: 'email2@example.com' },
@@ -123,50 +131,59 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' as any },
+        config: { method: 'GET' },
       };
 
-      jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
+      jest.spyOn(httpService, 'request').mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
-      const result = await service.getEmailRecipients('','','','','');
+      const result = await service.getEmailRecipients('', '', '', '', '');
       expect(result).toEqual('email1@example.com;email2@example.com');
     });
 
     it('should return an empty string if client token is not obtained', async () => {
-      jest.spyOn(configService, 'get').mockReturnValue('http://mock-recipients-list-api.com');
       jest.spyOn(service, 'getClientToken').mockResolvedValue('');
 
-      const result = await service.getEmailRecipients('','','','','');
+      const result = await service.getEmailRecipients('', '', '', '', '');
       expect(result).toEqual('');
+      expect(logger.error).toHaveBeenCalledWith(
+        'Unable to obtain client token from auth-api. Cannot proceed with emailRecipients API call',
+      );
     });
 
     it('should return an empty string if API response format is invalid', async () => {
-      jest.spyOn(configService, 'get').mockReturnValue('http://mock-recipients-list-api.com');
       const mockResponse: AxiosResponse<{}> = {
         data: {},
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' as any },
+        config: { method: 'GET' },
       };
 
-      jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
+      jest.spyOn(httpService, 'request').mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
-      const result = await service.getEmailRecipients('','','','','');
+      const result = await service.getEmailRecipients('', '', '', '', '');
       expect(result).toEqual('');
+      expect(logger.error).toHaveBeenCalledWith(
+        'Invalid response format from emailRecipients API',
+        {},
+      );
     });
 
     it('should return an empty string and log error on exception', async () => {
-      jest.spyOn(configService, 'get').mockReturnValue('http://mock-recipients-list-api.com');
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
-      jest.spyOn(httpService, 'post').mockImplementation(() => {
+      jest.spyOn(httpService, 'request').mockImplementation(() => {
         throw new Error('API Error With Logging');
       });
 
-      const result = await service.getEmailRecipients('','','','','');
+      const result = await service.getEmailRecipients('', '', '', '', '');
       expect(result).toEqual('');
+      expect(logger.error).toHaveBeenCalledWith(
+        'Error occurred during the API call to emailRecipients',
+        'API Error With Logging',
+      );
     });
+
   });
 });
