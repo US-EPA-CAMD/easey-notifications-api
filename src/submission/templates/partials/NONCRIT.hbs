@@ -1,0 +1,14 @@
+<p>
+  The EPA has accepted your {{processCodeName}} submission. However, this submission has failed one or more "Non-Critical" checks performed by ECMPS. These errors are listed as "NONCRIT" severity-level errors in the Evaluation Results at the end of this Feedback Report.
+</p>
+<p>
+  The "Non-Critical" errors are usually problems that may result in small calculation errors or other possible reporting errors that may have minimal impact on interpretation of the {{processCodeName}} and no obvious implication for other data (
+  {{#if (eq processCode "MP")}}
+    QA and/or emissions data
+  {{else if (eq processCode "QA")}}
+    MP and/or emissions data
+  {{else}}
+    MP and/or QA/Cert data
+  {{/if}}
+  ). If any of these errors indicate a problem in the reported data, the EPA strongly encourages you to correct the problem(s) and resubmit the data; however, correction of these errors is not required at this time.
+</p>
