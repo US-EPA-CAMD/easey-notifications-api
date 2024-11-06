@@ -184,5 +184,6 @@ describe('RecipientListService', () => {
         'API Error With Logging',
       );
     });
+
   });
 });

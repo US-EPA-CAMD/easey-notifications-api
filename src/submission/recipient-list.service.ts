@@ -109,6 +109,7 @@ export class RecipientListService {
     // This request is a bit unconventional.  The CBS API expects a GET request with a body.
     // Axios does not support this, so we are using the httpService.request method
     try {
+
       const response: AxiosResponse<any> = await firstValueFrom(
         this.httpService.request({
           method: 'GET',
