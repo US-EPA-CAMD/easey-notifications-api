@@ -64,7 +64,7 @@ describe('-- Submission Feedback Record Service --', () => {
 
   });
 
-  it('should add default table', () => {
+  it('should add default table to report', () => {
     const columns = {
       values: [
         { name: 'column1', displayName: 'Column 1' },

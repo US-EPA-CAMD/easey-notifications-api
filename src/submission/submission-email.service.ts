@@ -78,7 +78,7 @@ export class SubmissionEmailService {
 
             return await this.getSubmissionFeedbackEmailData(submissionEmailParamsDto);
         } catch (error) {
-          this.logger.error('Error while collecting data for ${processCode}', error.stack, 'SubmissionEmailService');
+          this.logger.error('Error while collecting feedback data for ${processCode}', error.stack, 'SubmissionEmailService');
           await this.errorHandlerService.handleSubmissionProcessingError(set, records, submissionStages, error);
           return null; // Ensure the promise resolves to a value
         }
@@ -147,15 +147,16 @@ export class SubmissionEmailService {
 
     await this.setCommonParams(submissionEmailParamsDto);
 
-    submissionEmailParamsDto.ccEmail = this.configService.get<boolean>('app.recipientsListApiEnabled',)
-      ? await this.recipientListService.getEmailRecipients(
-        'SUBMISSIONCONFIRMATION',
-        submissionEmailParamsDto.facId,
+    //Get the recipients list from the recipient's list API
+    const recipientsListApiEnabled = this.configService.get<boolean>('app.recipientsListApiEnabled');
+
+    submissionEmailParamsDto.ccEmail = recipientsListApiEnabled ? await this.recipientListService.getEmailRecipients(
         submissionSet.userIdentifier,
         submissionEmailParamsDto.processCode,
-        false,
-      )
-      : '';
+      '',
+      'SUBMISSIONCONFIRMATION',
+      submissionEmailParamsDto.facId?.toString(),
+    ) : '';
 
     submissionEmailParamsDto.templateContext['toEmail'] = submissionEmailParamsDto.toEmail;
     submissionEmailParamsDto.templateContext['ccEmail'] = submissionEmailParamsDto.ccEmail;

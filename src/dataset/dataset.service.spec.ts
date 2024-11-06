@@ -64,18 +64,4 @@ describe('DataSetService', () => {
     expect(service).toBeDefined();
     expect(repository).toBeDefined();
   });
-
-  // describe('getDataSet', () => {
-  //   it('should return a dataset', async () => {
-  //     const params = new ReportParamsDTO();
-  //     repository.getDataSet.mockResolvedValue(dataset);
-  //     repository.query.mockResolvedValue([]);
-  //     const result = await service.getDataSet(params);
-
-  //     expect(repository.getDataSet).toHaveBeenCalled();
-  //     expect(repository.query).toHaveBeenCalled();
-  //     expect(result).toEqual({"columns": [], "note": [], "displayName": "Test"});
-  //   });
-
-  // });
 });

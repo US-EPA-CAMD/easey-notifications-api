@@ -75,7 +75,7 @@ describe('DocumentService', () => {
   });
 
   describe('buildDocuments', () => {
-    it('should build documents successfully', async () => {
+    it('should build documents successfully and sign them', async () => {
       const set = new SubmissionSet();
       const records = [new SubmissionQueue()];
       const folderPath = 'mock/folder/path';

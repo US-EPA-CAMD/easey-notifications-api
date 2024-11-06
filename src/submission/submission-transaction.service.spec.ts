@@ -122,7 +122,7 @@ describe('SubmissionTransactionService', () => {
   });
 
   describe('buildTransactions', () => {
-    it('should build transactions for MP records', async () => {
+    it('should build transactions for MP records successfully', async () => {
       const set = new SubmissionSet();
       set.monPlanIdentifier = 'mockMonPlanId';
       const records = [

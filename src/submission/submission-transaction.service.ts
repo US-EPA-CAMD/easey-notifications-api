@@ -85,7 +85,8 @@ export class SubmissionTransactionService {
       }),
     );
 
-    //Read file content as a byte-array instead of as a string. This correctly processes binary and non-binarry files.
+    //Read file content as a byte-array instead of as a string.
+   // This correctly processes binary and non-binary files.
     const filePath = `${folderPath}/MATS_${set.monPlanIdentifier}_${matsRecord.testTypeGroup}_${matsRecord.testNumber}_${matsRecord.fileName}`;
     const bodyContents = await getObjectResponse.Body.transformToByteArray();
     writeFileSync(filePath, Buffer.from(bodyContents));

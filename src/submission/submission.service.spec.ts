@@ -143,7 +143,7 @@ describe('-- Submission Service --', () => {
     expect(service).toBeDefined();
   });
 
-  it('should execute a payload successfully and make the proper calls', async () => {
+  it('should execute a payload successfully', async () => {
     await service.queueSubmissionRecords(payloadDto);
 
     // Calculate expected number of saves

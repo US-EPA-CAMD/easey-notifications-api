@@ -91,7 +91,7 @@ describe('ErrorHandlerService', () => {
   });
 
   describe('handleSubmissionProcessingError', () => {
-    it('should handle errors and send emails', async () => {
+    it('should handle errors properly and send emails', async () => {
       const set = new SubmissionSet();
       set.userEmail = 'user@example.com';
       set.configuration = 'mock-config';

@@ -144,7 +144,7 @@ describe('SubmissionProcessService', () => {
       );
     });
 
-    it('should handle errors and call error handler', async () => {
+    it('should handle errors and call error handler properly', async () => {
       const setId = 'test-set-id';
       const submissionSet = new SubmissionSet();
       submissionSet.submissionSetIdentifier = setId;

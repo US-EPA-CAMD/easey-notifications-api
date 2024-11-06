@@ -124,7 +124,7 @@ export class SubmissionProcessService {
 
       submissionStages.push({ action: 'FEEDBACK_EMAILS_SENT', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
-      // Update the submission set and submission queue statuses to 'COMPLETE'
+      // Update the submission set and submission queue statuses to 'COMPLETE' and submission status to 'UPDATED'
       await this.submissionSetHelper.setRecordStatusCode(set, submissionQueueRecords, 'COMPLETE', '', set.hasCritErrors ? 'CRITERR' : 'UPDATED');
       await this.submissionSetHelper.updateSubmissionSetStatus(set, 'COMPLETE');
 

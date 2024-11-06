@@ -10,7 +10,7 @@ export class SubmissionEmailParamsDto {
   submissionQueueRecords: SubmissionQueue [];
   highestSeverityRecord : HighestSeverityRecord;
 
-  //Facility Information
+  //Facility Information Details
   rptPeriod             : ReportingPeriod; //For EM records only
   monLocationIds        : string;   //Comma separated list
   facilityName          : string;

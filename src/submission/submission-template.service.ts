@@ -3,6 +3,8 @@ import * as Handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 
+//Template config for submission feedback emails
+
 @Injectable()
 export class SubmissionTemplateService {
   private templatesCache: Map<string, Handlebars.TemplateDelegate> = new Map();

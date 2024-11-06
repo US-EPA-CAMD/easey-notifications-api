@@ -91,7 +91,7 @@ describe('SubmissionEmailService', () => {
   });
 
   describe('collectFeedbackReportDataForEmail', () => {
-    it('should collect feedback report data successfully', async () => {
+    it('should collect feedback report data', async () => {
       const set = new SubmissionSet();
       const submissionSetRecords = [new SubmissionQueue()];
       const severityCodes = [new SeverityCode()];
