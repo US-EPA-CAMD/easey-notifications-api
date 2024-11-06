@@ -47,7 +47,6 @@
     "https": "^1.0.0",
     "liquidjs": "^10.18.0",
     "moment": "^2.29.4",
-    "nest-router": "^1.0.9",
     "nodemailer": "^6.9.9",
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
