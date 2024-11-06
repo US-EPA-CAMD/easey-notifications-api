@@ -2,7 +2,6 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
-import { Logger } from '@us-epa-camd/easey-common/logger';
 
 import { ProcessParamsDTO } from '../dto/process-params.dto';
 import { SubmissionQueueDTO } from '../dto/submission-queue.dto';
@@ -11,17 +10,17 @@ import { EmissionsLastUpdatedMap } from '../maps/emissions-last-updated.map';
 import { SubmissionProcessService } from './submission-process.service';
 import { SubmissionController } from './submission.controller';
 import { SubmissionService } from './submission.service';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 jest.mock('./submission.service');
 jest.mock('./submission-process.service');
 
 describe('-- Submission Controller --', () => {
   let controller: SubmissionController;
-  let logger: Logger;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [HttpModule, LoggerModule],
       controllers: [SubmissionController],
       providers: [
         {
@@ -33,25 +32,17 @@ describe('-- Submission Controller --', () => {
         ConfigService,
         CombinedSubmissionsMap,
         EmissionsLastUpdatedMap,
-        {
-          provide: Logger,
-          useValue: {
-            error: jest.fn(),
-            debug: jest.fn(),
-          },
-        },
       ],
     }).compile();
 
     controller = module.get(SubmissionController);
-    logger = module.get<Logger>(Logger);
   });
 
   it('should be defined', async () => {
     expect(controller).toBeDefined();
   });
 
-  it('evaluate', async () => {
+  it('should evaluate', async () => {
     const dtoParams = new SubmissionQueueDTO();
 
     expect(async () => {
