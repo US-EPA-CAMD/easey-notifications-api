@@ -372,7 +372,7 @@ export class MailEvalService {
     if (attempt < 3) {
       try {
         const success = await this.mailerService.sendMail({
-          to, // List of receivers email address
+          to, // List of receivers email addresses
           cc,
           from,
           subject,
@@ -661,7 +661,7 @@ export class MailEvalService {
 
       templateContext['monitorPlan'].items[
         'reportUrl'
-        ] = `${this.configService.get<string>(
+      ] = `${this.configService.get<string>(
         'app.ecmpsHost',
       )}/workspace/reports?reportCode=MP_EVAL&facilityId=${
         plant.orisCode

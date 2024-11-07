@@ -28,7 +28,7 @@ export class DocumentService {
   public async buildDocumentsAndWriteToFile(set: SubmissionSet, records: SubmissionQueue[], folderPath: string): Promise<{ documentTitle: string; context: string }[]> {
     const documents = [];
 
-    // Build evaluation reports
+    // Build evaluation reports for each file type.
     this.logger.log(`Adding evaluation reports`);
     await this.addEvalReports(set, records, documents);
 
@@ -39,7 +39,7 @@ export class DocumentService {
     this.logger.log(`Adding certification statements`);
     await this.addCertificationStatements(set, documents);
 
-    // Write documents to files
+    // Write documents to files.
     this.logger.log(`Writing documents to files...`);
     for (const doc of documents) {
       writeFileSync(`${folderPath}/${doc.documentTitle}.html`, doc.context);

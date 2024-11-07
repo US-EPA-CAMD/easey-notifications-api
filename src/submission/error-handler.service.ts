@@ -37,7 +37,7 @@ export class ErrorHandlerService {
   ) {
     try {
 
-      // JSON.stringify the error note
+      // JSON.stringify the error note. This should not cause any errors by itself.
       try {
         // Safely capture error note
         submissionSet.note = JSON.stringify({

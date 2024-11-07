@@ -1,5 +1,12 @@
 import { Controller } from '@nestjs/common';
-import { Get, Query, Post, Put, Body, Param } from '@nestjs/common/decorators';
+import {
+  Get,
+  Query,
+  Post,
+  Put,
+  Body,
+  Param,
+} from '@nestjs/common/decorators';
 import {
   ApiCreatedResponse,
   ApiOkResponse,
@@ -19,7 +26,7 @@ import {
   EmSubmissionAccessUpdateDTO,
 } from '../dto/em-submission-access.dto';
 import { EmSubmissionAccessParamsDTO } from '../dto/em-submission-access.params.dto';
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 
@@ -58,6 +65,10 @@ export class EmSubmissionAccessController {
   @ApiOperation({
     description: 'Creates an Emission Submission Access Record.',
   })
+  @AuditLog({
+    label: 'Emission Submission Access - Create',
+    outFields: '*',
+  })
   async createEmSubmissionAccess(
     @Body() payload: EmSubmissionAccessCreateDTO,
     @User() user: CurrentUser,
@@ -74,6 +85,10 @@ export class EmSubmissionAccessController {
   })
   @ApiOperation({
     description: 'Updates an Emission Submission Access Record.',
+  })
+  @AuditLog({
+    label: 'Emission Submission Access - Update',
+    outFields: '*',
   })
   async updateEmSubmissionAccess(
     @Param('id') id: number,

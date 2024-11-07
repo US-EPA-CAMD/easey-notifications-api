@@ -35,7 +35,7 @@ describe('SubmissionSetHelperService', () => {
   });
 
   describe('updateSubmissionSetStatus', () => {
-    it('should update submission set status', async () => {
+    it('should update submission set status successfully', async () => {
       const submissionSet = new SubmissionSet();
 
       await service.updateSubmissionSetStatus(submissionSet, 'COMPLETE', 'Details');

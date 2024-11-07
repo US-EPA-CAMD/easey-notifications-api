@@ -61,10 +61,9 @@ describe('-- Submission Feedback Record Service --', () => {
     expect(result).toContain('<th>Column 2</th>');
     expect(result).toContain('<td>value1</td>');
     expect(result).toContain('<td>value2</td>');
-
   });
 
-  it('should add default table', () => {
+  it('should add default table to report', () => {
     const columns = {
       values: [
         { name: 'column1', displayName: 'Column 1' },

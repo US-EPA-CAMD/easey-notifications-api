@@ -83,7 +83,7 @@ export class SubmissionService {
       );
 
       if (!mp) {
-        throw new Error(`Monitor Plan not found for ID: ${evaluationItem.monPlanId}`);
+        throw new Error(`Monitor Plan not found for monPlanId: ${evaluationItem.monPlanId}`);
       }
 
       const facility: Plant = await entityManager.findOneBy(Plant, {

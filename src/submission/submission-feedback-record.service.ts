@@ -109,7 +109,7 @@ export class SubmissionFeedbackRecordService {
   ): string {
     let summaryTableContent = '';
 
-    // Process each detail from the report
+    // Process each detail from the report. Avoid errors.
     for (const detail of report.details ?? []) {
       const columns = report.columns.find((x) => x.code === detail.templateCode);
       const header = `<b> Unit/Stack/Pipe ID: ${locationId} </b>`;

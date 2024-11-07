@@ -59,8 +59,7 @@ export class SubmissionProcessService {
       mkdirSync(folderPath);
 
       // Build transactions
-      const transactions: any = [];
-      await this.transactionService.buildTransactions(set, submissionQueueRecords, folderPath, transactions);
+      const transactions = await this.transactionService.buildTransactions(set, submissionQueueRecords, folderPath);
       this.logger.log(`Completed building transactions...`);
 
       // Build documents
@@ -87,7 +86,7 @@ export class SubmissionProcessService {
       submissionStages.push({ action: 'COPYING_DATA_TO_OFFICIAL', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
       // Copy records from workspace to official
-      await this.copyToOfficial(set, submissionQueueRecords);
+      await this.copyToOfficial(set, transactions);
 
       //Push the submission stage here
       submissionStages.push({ action: 'DATA_COPIED_TO_OFFICIAL', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
@@ -97,34 +96,34 @@ export class SubmissionProcessService {
       this.logger.debug('Sending emails with feedback attachment ...');
       for (const submissionFeedbackEmailData of submissionFeedbackEmailDataList) {
 
-        this.logger.debug('Sending email feedback...', {
-          toEmail: submissionFeedbackEmailData.toEmail,
-          ccEmail: submissionFeedbackEmailData.ccEmail,
-          subject: submissionFeedbackEmailData.subject,
-        });
+          this.logger.debug('Sending email feedback...', {
+            toEmail: submissionFeedbackEmailData.toEmail,
+            ccEmail: submissionFeedbackEmailData.ccEmail,
+            subject: submissionFeedbackEmailData.subject,
+          });
 
-        // Attempt to send an email. If sending an email for this particular file type fails,
-        // log the error and continue attempting to send emails for the others
-        try {
-          await this.mailEvalService.sendEmailWithRetry(
-            submissionFeedbackEmailData.toEmail,
-            submissionFeedbackEmailData.ccEmail,
-            submissionFeedbackEmailData.fromEmail,
-            submissionFeedbackEmailData.subject,
-            submissionFeedbackEmailData.emailTemplate,
-            submissionFeedbackEmailData.templateContext,
-            1,
-            submissionFeedbackEmailData.feedbackAttachmentDocuments,
-          );
-        } catch (e) {
-          this.logger.error('Error attempting to send feedback email : ' +  {processCode : submissionFeedbackEmailData.processCode}, e.stack, 'SubmissionProcessService');
-          await this.errorHandlerService.handleSubmissionProcessingError(submissionFeedbackEmailData.submissionSet, submissionFeedbackEmailData.submissionQueueRecords, submissionStages, e);
-        }
+          // Attempt to send an email. If sending an email for this particular file type fails,
+          // log the error and continue attempting to send emails for the others
+          try {
+            await this.mailEvalService.sendEmailWithRetry(
+              submissionFeedbackEmailData.toEmail,
+              submissionFeedbackEmailData.ccEmail,
+              submissionFeedbackEmailData.fromEmail,
+              submissionFeedbackEmailData.subject,
+              submissionFeedbackEmailData.emailTemplate,
+              submissionFeedbackEmailData.templateContext,
+              1,
+              submissionFeedbackEmailData.feedbackAttachmentDocuments,
+            );
+          } catch (e) {
+            this.logger.error('Error attempting to send feedback email : ' +  {processCode : submissionFeedbackEmailData.processCode}, e.stack, 'SubmissionProcessService');
+            await this.errorHandlerService.handleSubmissionProcessingError(submissionFeedbackEmailData.submissionSet, submissionFeedbackEmailData.submissionQueueRecords, submissionStages, e);
+          }
       }
 
       submissionStages.push({ action: 'FEEDBACK_EMAILS_SENT', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
-      // Update the submission set and submission queue statuses to 'COMPLETE'
+      // Update the submission set and submission queue statuses to 'COMPLETE' and submission status to 'UPDATED'
       await this.submissionSetHelper.setRecordStatusCode(set, submissionQueueRecords, 'COMPLETE', '', set.hasCritErrors ? 'CRITERR' : 'UPDATED');
       await this.submissionSetHelper.updateSubmissionSetStatus(set, 'COMPLETE');
 

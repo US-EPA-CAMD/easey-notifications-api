@@ -78,7 +78,7 @@ export class SubmissionEmailService {
 
             return await this.getSubmissionFeedbackEmailData(submissionEmailParamsDto);
         } catch (error) {
-          this.logger.error('Error while collecting data for ${processCode}', error.stack, 'SubmissionEmailService');
+          this.logger.error('Error while collecting feedback data for ${processCode}', error.stack, 'SubmissionEmailService');
           await this.errorHandlerService.handleSubmissionProcessingError(set, records, submissionStages, error);
           return null; // Ensure the promise resolves to a value
         }
@@ -151,8 +151,8 @@ export class SubmissionEmailService {
     const recipientsListApiEnabled = this.configService.get<boolean>('app.recipientsListApiEnabled');
 
     submissionEmailParamsDto.ccEmail = recipientsListApiEnabled ? await this.recipientListService.getEmailRecipients(
-      submissionSet.userIdentifier,
-      submissionEmailParamsDto.processCode,
+        submissionSet.userIdentifier,
+        submissionEmailParamsDto.processCode,
       '',
       'SUBMISSIONCONFIRMATION',
       submissionEmailParamsDto.facId?.toString(),

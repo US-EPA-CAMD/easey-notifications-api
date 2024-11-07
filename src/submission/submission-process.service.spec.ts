@@ -144,7 +144,7 @@ describe('SubmissionProcessService', () => {
       );
     });
 
-    it('should handle errors and call error handler', async () => {
+    it('should handle errors and call error handler properly', async () => {
       const setId = 'test-set-id';
       const submissionSet = new SubmissionSet();
       submissionSet.submissionSetIdentifier = setId;
@@ -154,7 +154,7 @@ describe('SubmissionProcessService', () => {
       stages.push({ action: 'SUBMISSION_LOADED', dateTime: 'N/A' });
       stages.push({ action: 'SET_STATUS_WIP', dateTime: 'N/A' });
 
-      jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(submissionSet);
+        jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(submissionSet);
       jest.spyOn(entityManager, 'find').mockResolvedValueOnce(submissionSetRecords);
       jest.spyOn(service['submissionSetHelper'], 'updateSubmissionSetStatus').mockResolvedValue();
       jest.spyOn(service['submissionSetHelper'], 'setRecordStatusCode').mockResolvedValue();

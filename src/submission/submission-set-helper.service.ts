@@ -138,6 +138,7 @@ export class SubmissionSetHelperService {
       facIdentifier: facIdentifier,
     });
 
+    //Check for a valid facility
     if (!facility) {
       throw new Error(`Facility not found for facIdentifier: ${facIdentifier}`);
     }
