@@ -131,9 +131,8 @@ describe('SubmissionTransactionService', () => {
         }),
       ];
       const folderPath = 'mock/folder/path';
-      const transactions = [];
 
-      await service.buildTransactions(set, records, folderPath, transactions);
+      const transactions = await service.buildTransactions(set, records, folderPath);
 
       expect(transactions.length).toBe(1);
       expect(transactions[0].command).toContain('copy_monitor_plan_from_workspace_to_global');
