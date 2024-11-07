@@ -59,8 +59,7 @@ export class SubmissionProcessService {
       mkdirSync(folderPath);
 
       // Build transactions
-      const transactions: any = [];
-      await this.transactionService.buildTransactions(set, submissionQueueRecords, folderPath, transactions);
+      const transactions = await this.transactionService.buildTransactions(set, submissionQueueRecords, folderPath);
       this.logger.log(`Completed building transactions...`);
 
       // Build documents
@@ -87,7 +86,7 @@ export class SubmissionProcessService {
       submissionStages.push({ action: 'COPYING_DATA_TO_OFFICIAL', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
       // Copy records from workspace to official
-      await this.copyToOfficial(set, submissionQueueRecords);
+      await this.copyToOfficial(set, transactions);
 
       //Push the submission stage here
       submissionStages.push({ action: 'DATA_COPIED_TO_OFFICIAL', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
