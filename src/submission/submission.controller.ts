@@ -4,16 +4,15 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { Body, Controller, Post, UseGuards, Get, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Get, Query } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { SubmissionQueueDTO } from '../dto/submission-queue.dto';
 import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 import { SubmissionProcessService } from './submission-process.service';
 import { ProcessParamsDTO } from '../dto/process-params.dto';
 import { SubmissionsLastUpdatedResponseDTO } from '../dto/submission-last-updated.dto';
-import { LoggingInterceptor } from '@us-epa-camd/easey-common';
 
 @Controller()
 @ApiTags('Submission')
@@ -45,7 +44,11 @@ export class SubmissionController {
     { bodyParam: 'items.*.monPlanId', requiredRoles: ['Submitter', 'Sponsor', 'Initial Authorizer'] },
     LookupType.MonitorPlan,
   )
-  @UseInterceptors(LoggingInterceptor)
+  @AuditLog({
+    label: 'Creates Submission Queue',
+    bodyOutFields:'*',
+    requestInFields:['userEmail']
+  })
   async queue(@Body() params: SubmissionQueueDTO): Promise<void> {
     await this.service.queueSubmissionRecords(params);
   }
