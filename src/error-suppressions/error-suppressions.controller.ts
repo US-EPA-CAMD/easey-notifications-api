@@ -65,7 +65,7 @@ export class ErrorSuppressionsController {
   })
   @AuditLog({
     label: 'Error Suppression - Deactivate',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   deactivateErrorSuppression(
     @Param('id') id: number,
@@ -79,7 +79,7 @@ export class ErrorSuppressionsController {
   @ApiCreatedResponse({ description: 'Creates an Error Suppression Record' })
   @AuditLog({
     label: 'Error Suppression - Create',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async createErrorSuppression(
     @Body() payload: ErrorSuppressionsPayloadDTO,

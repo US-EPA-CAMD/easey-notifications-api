@@ -67,7 +67,7 @@ export class EmSubmissionAccessController {
   })
   @AuditLog({
     label: 'Emission Submission Access - Create',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async createEmSubmissionAccess(
     @Body() payload: EmSubmissionAccessCreateDTO,
@@ -88,7 +88,7 @@ export class EmSubmissionAccessController {
   })
   @AuditLog({
     label: 'Emission Submission Access - Update',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async updateEmSubmissionAccess(
     @Param('id') id: number,
