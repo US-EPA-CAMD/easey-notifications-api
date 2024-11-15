@@ -46,8 +46,8 @@ export class SubmissionController {
   )
   @AuditLog({
     label: 'Creates Submission Queue',
-    bodyOutFields:'*',
-    requestInFields:['userEmail']
+    requestBodyOutFields:'*',
+    omitFields:['userEmail']
   })
   async queue(@Body() params: SubmissionQueueDTO): Promise<void> {
     await this.service.queueSubmissionRecords(params);

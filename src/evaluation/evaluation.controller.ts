@@ -24,8 +24,8 @@ export class EvaluationController {
   )
   @AuditLog({
     label: 'Creates Evaluation Queue',
-    bodyOutFields:'*',
-    requestInFields:['userEmail']
+    requestBodyOutFields:'*',
+    omitFields:['userEmail']
   })
   async evaluate(@Body() params: EvaluationDTO): Promise<void> {
     await this.service.queueEvaluationRecords(params);
