@@ -42,6 +42,7 @@ export class ReportWorkspaceController {
     type: ReportDTO,
     description: 'Data retrieved successfully',
   })
+  @ApiExcludeEndpointByEnv()
   @ApiOperation({
     description:
       'Retrieves workspace data for various reports based on criteria.',
