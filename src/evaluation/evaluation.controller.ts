@@ -4,6 +4,7 @@ import { EvaluationService } from './evaluation.service';
 import { RoleGuard, AuditLog } from '@us-epa-camd/easey-common/decorators';
 import { EvaluationDTO } from '../dto/evaluation.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 
 @Controller()
 @ApiTags('Evaluation')
@@ -22,6 +23,7 @@ export class EvaluationController {
     },
     LookupType.MonitorPlan,
   )
+  @ApiExcludeEndpointByEnv()
   @AuditLog({
     label: 'Creates Evaluation Queue',
     requestBodyOutFields:'*',

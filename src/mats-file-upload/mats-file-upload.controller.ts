@@ -14,6 +14,7 @@ import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { ConfigService } from '@nestjs/config';
+import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 
 const MAX_UPLOAD_SIZE_MB: number = 30;
 
@@ -37,6 +38,7 @@ export class MatsFileUploadController {
     },
     LookupType.MonitorPlan,
   )
+  @ApiExcludeEndpointByEnv()
   @ApiBody({
     schema: {
       type: 'object',

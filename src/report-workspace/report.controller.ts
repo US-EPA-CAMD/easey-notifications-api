@@ -14,6 +14,7 @@ import { AuthGuard } from '@us-epa-camd/easey-common/guards';
 import { ReportDTO } from '../dto/report.dto';
 import { DataSetService } from '../dataset/dataset.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
+import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 
 @Controller()
 @ApiTags('Reports')
@@ -28,6 +29,7 @@ export class ReportWorkspaceController {
     type: ReportDTO,
     description: 'Data retrieved successfully',
   })
+  @ApiExcludeEndpointByEnv()
   @ApiOperation({
     description: 'Retrieves list of workspace reports available.',
   })

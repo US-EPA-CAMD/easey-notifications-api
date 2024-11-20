@@ -14,6 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  ApiExcludeEndpointByEnv,
   BadRequestResponse,
   NotFoundResponse,
 } from '../utilities/swagger-decorator.const';
@@ -55,6 +56,7 @@ export class QaCertEventController {
 
   @Put(':id')
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
+  @ApiExcludeEndpointByEnv()
   @ApiOkResponse({
     isArray: false,
     type: QaCertEventMaintViewDTO,
@@ -78,6 +80,7 @@ export class QaCertEventController {
 
   @Delete(':id')
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
+  @ApiExcludeEndpointByEnv()
   @ApiOkResponse({
     isArray: false,
     type: SuccessMessageDTO,

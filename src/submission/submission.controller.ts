@@ -13,6 +13,7 @@ import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 import { SubmissionProcessService } from './submission-process.service';
 import { ProcessParamsDTO } from '../dto/process-params.dto';
 import { SubmissionsLastUpdatedResponseDTO } from '../dto/submission-last-updated.dto';
+import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 
 @Controller()
 @ApiTags('Submission')
@@ -44,6 +45,7 @@ export class SubmissionController {
     { bodyParam: 'items.*.monPlanId', requiredRoles: ['Submitter', 'Sponsor', 'Initial Authorizer'] },
     LookupType.MonitorPlan,
   )
+  @ApiExcludeEndpointByEnv()
   @AuditLog({
     label: 'Creates Submission Queue',
     requestBodyOutFields:'*',
@@ -61,6 +63,7 @@ export class SubmissionController {
   @ApiSecurity('ClientId')
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
+  @ApiExcludeEndpointByEnv()
   async process(@Body() params: ProcessParamsDTO): Promise<void> {
     this.processService.processSubmissionSet(params.submissionSetId);
   }

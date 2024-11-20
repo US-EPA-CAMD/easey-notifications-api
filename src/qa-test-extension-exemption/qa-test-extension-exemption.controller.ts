@@ -14,6 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  ApiExcludeEndpointByEnv,
   BadRequestResponse,
   NotFoundResponse,
 } from '../utilities/swagger-decorator.const';
@@ -51,6 +52,7 @@ export class QaTestExtensionExemptionController {
 
   @Put(':id')
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
+  @ApiExcludeEndpointByEnv()
   @ApiOkResponse({
     isArray: false,
     type: QaTeeMaintViewDTO,
@@ -74,6 +76,7 @@ export class QaTestExtensionExemptionController {
 
   @Delete(':id')
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
+  @ApiExcludeEndpointByEnv()
   @ApiOkResponse({
     isArray: false,
     type: SuccessMessageDTO,

@@ -5,6 +5,7 @@ import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
 import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -65,6 +66,7 @@ export class CopyOfRecordController {
     },
     LookupType.Facility,
   )
+  @ApiExcludeEndpointByEnv()
   generatePdfWorkspace(
     @Query() params: ReportParamsDTO,
     @Res({ passthrough: true }) res: Response,
