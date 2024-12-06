@@ -8,16 +8,13 @@ import { applyDecorators } from '@nestjs/common';
 import { getConfigValue } from '@us-epa-camd/easey-common/utilities';
 
 const env = getConfigValue('EASEY_CAMD_SERVICES_ENV', 'local-dev');
-const disable = [
-  'dev',
-  'tst',
-  'test',
-  'develop',
-  'development',
+const enableSwagger = [
   'local-dev',
-].includes(env)
-  ? false
-  : true;
+  'dev', 'develop', 'development',
+  'tst','test', 'testing',
+  'staging', 'stage',
+  'perf', 'performance',
+].includes(env);
 
 export const BadRequestResponse = () =>
   ApiBadRequestResponse({
@@ -30,9 +27,9 @@ export const NotFoundResponse = () =>
   });
 
 export function ApiExcludeControllerByEnv() {
-  return applyDecorators(ApiExcludeController(disable));
+  return applyDecorators(ApiExcludeController(!enableSwagger));
 }
 
 export function ApiExcludeEndpointByEnv() {
-  return applyDecorators(ApiExcludeEndpoint(disable));
+  return applyDecorators(ApiExcludeEndpoint(!enableSwagger));
 }
