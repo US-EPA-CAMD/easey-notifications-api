@@ -42,7 +42,7 @@
     "@us-epa-camd/easey-common": "18.1.0",
     "axios": "^1.7.7",
     "class-transformer": "0.4.0",
-    "class-validator": "0.14.0",
+    "class-validator": "0.14.1",
     "dotenv": "^10.0.0",
     "express": "^4.20.0",
     "fs": "^0.0.1-security",
@@ -93,6 +93,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/node/axios.cjs"
+    },
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
