@@ -64,7 +64,7 @@ export class QaTestSummaryController {
   })
   @AuditLog({
     label: 'QA Test Summary Maintenance - Require Resubmission',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   updateSubmissionStatus(
     @Param('id') id: string,
@@ -86,7 +86,7 @@ export class QaTestSummaryController {
   })
   @AuditLog({
     label: 'QA Test Summary Maintenance - Delete',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async deleteQATestSummaryData(@Param('id') id: string): Promise<any> {
     return this.service.deleteQATestSummaryData(id);

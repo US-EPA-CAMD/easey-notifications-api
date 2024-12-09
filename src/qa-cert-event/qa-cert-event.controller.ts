@@ -66,7 +66,7 @@ export class QaCertEventController {
   })
   @AuditLog({
     label: 'QA Cert Event Maintenance - Require Resubmission',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   updateSubmissionStatus(
     @Param('id') id: string,
@@ -88,7 +88,7 @@ export class QaCertEventController {
   })
   @AuditLog({
     label: 'QA Cert Event Maintenance - Delete',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async deleteQACertEventData(@Param('id') id: string): Promise<any> {
     return this.service.deleteQACertEventData(id);
