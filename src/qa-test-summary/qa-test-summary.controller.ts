@@ -19,7 +19,7 @@ import {
 } from '../utilities/swagger-decorator.const';
 import { QaTestSummaryService } from './qa-test-summary.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
@@ -62,6 +62,10 @@ export class QaTestSummaryController {
     description:
       'Changes submission status to resubmit and update re-submission explanation for QA Test maintenance record.',
   })
+  @AuditLog({
+    label: 'QA Test Summary Maintenance - Require Resubmission',
+    responseBodyOutFields: '*',
+  })
   updateSubmissionStatus(
     @Param('id') id: string,
     @User() user: CurrentUser,
@@ -79,6 +83,10 @@ export class QaTestSummaryController {
   })
   @ApiOperation({
     description: 'Deletes a QA Test maintenance record.',
+  })
+  @AuditLog({
+    label: 'QA Test Summary Maintenance - Delete',
+    responseBodyOutFields: '*',
   })
   async deleteQATestSummaryData(@Param('id') id: string): Promise<any> {
     return this.service.deleteQATestSummaryData(id);

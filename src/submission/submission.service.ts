@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EntityManager, In, MoreThanOrEqual, Not } from 'typeorm';
@@ -22,6 +22,8 @@ import { SubmissionQueue } from '../entities/submission-queue.entity';
 import { SubmissionSet } from '../entities/submission-set.entity';
 import { CombinedSubmissionsMap } from '../maps/combined-submissions.map';
 import { EmissionsLastUpdatedMap } from '../maps/emissions-last-updated.map';
+import { ErrorHandlerService } from './error-handler.service';
+import { SubmissionSetHelperService } from './submission-set-helper.service';
 
 @Injectable()
 export class SubmissionService {
@@ -30,6 +32,8 @@ export class SubmissionService {
     private readonly logger: Logger,
     private readonly combinedSubmissionMap: CombinedSubmissionsMap,
     private readonly emissionsLastUpdatedMap: EmissionsLastUpdatedMap,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly submissionSetHelper: SubmissionSetHelperService,
   ) {}
 
   private async ensureRelatedInactivePlansSubmitted(monPlanId: string) {
@@ -70,62 +74,85 @@ export class SubmissionService {
     return this.entityManager;
   }
 
-  async queueRecord(
+  private async queueRecord(
     userId: string,
     userEmail: string,
     activityId: string,
     hasCritErrors: boolean,
-    item: EvaluationItem,
+    evaluationItem: EvaluationItem,
+    entityManager: EntityManager,
+    queueingStages: { action: string; dateTime: string }[],
   ): Promise<void> {
+
+    const submissionSet = new SubmissionSet();
+    let currentSubmissionQueue: SubmissionQueue | null = null;
+
     try {
       const currentTime = new Date();
-      const set_id = uuidv4();
+      const setId = uuidv4();
 
-      const submissionSet = new SubmissionSet();
+      this.logger.log(`Queueing record. setId: ${setId}, MonPlanId: ${evaluationItem?.monPlanId || 'N/A'}, UserId: ${userId || 'N/A'}`,);
+
       submissionSet.hasCritErrors = hasCritErrors;
       submissionSet.activityId = activityId;
-      submissionSet.submissionSetIdentifier = set_id;
-      submissionSet.monPlanIdentifier = item.monPlanId;
+      submissionSet.submissionSetIdentifier = setId;
+      submissionSet.monPlanIdentifier = evaluationItem.monPlanId;
       submissionSet.userIdentifier = userId;
       submissionSet.userEmail = userEmail;
-      submissionSet.submittedOn = currentTime;
+      submissionSet.queuedTime = currentTime;
       submissionSet.statusCode = 'QUEUED';
 
-      const locations = await this.returnManager().query(
+      //Push queueing stage here
+      queueingStages.push({ action: 'SET_ID_ASSIGNED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
+
+      const locations = await entityManager.query(
         `SELECT camdecmpswks.get_mp_location_list($1);`,
-        [item.monPlanId],
+        [evaluationItem.monPlanId],
       );
 
       submissionSet.configuration = locations[0]['get_mp_location_list'];
 
-      const mp: MonitorPlan = await this.returnManager().findOneBy(
+      const mp: MonitorPlan = await entityManager.findOneBy(
         MonitorPlan,
-        { monPlanIdentifier: item.monPlanId },
+        { monPlanIdentifier: evaluationItem.monPlanId },
       );
 
-      const facility: Plant = await this.returnManager().findOneBy(Plant, {
+      if (!mp) {
+        throw new Error(`Monitor Plan not found for monPlanId: ${evaluationItem.monPlanId}`);
+      }
+
+      const facility: Plant = await entityManager.findOneBy(Plant, {
         facIdentifier: mp.facIdentifier,
       });
+
+      if (!facility) {
+        throw new Error(`Facility not found for facIdentifier: ${mp.facIdentifier}`);
+      }
 
       submissionSet.facIdentifier = facility.facIdentifier;
       submissionSet.orisCode = facility.orisCode;
       submissionSet.facName = facility.facilityName;
 
-      await this.returnManager().save(SubmissionSet, submissionSet);
+      await entityManager.save(SubmissionSet, submissionSet);
 
-      if (item.submitMonPlan === true) {
+      //Push queueing stage here
+      queueingStages.push({ action: 'SET_SAVED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
+
+      if (evaluationItem.submitMonPlan === true) {
+        this.logger.log(`Creating a monitoring plan record. setId: ${setId}, MonPlanId: ${evaluationItem?.monPlanId || 'N/A'}`,);
         //Create monitor plan queue record
         mp.submissionAvailabilityCode = 'PENDING';
 
         const mpRecord = new SubmissionQueue();
-        mpRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = mpRecord; // Keep reference for error handling
+        mpRecord.submissionSetIdentifier = setId;
         mpRecord.processCode = 'MP';
         mpRecord.statusCode = 'QUEUED';
-        mpRecord.submittedOn = currentTime;
+        mpRecord.queuedTime = currentTime;
 
-        const cs: CheckSession = await this.returnManager()
+        const cs: CheckSession = await entityManager
           .createQueryBuilder(CheckSession, 'cs')
-          .where('cs.monPlanId = :monPlanId', { monPlanId: item.monPlanId })
+          .where('cs.monPlanId = :monPlanId', { monPlanId: evaluationItem.monPlanId })
           .andWhere('cs.processCode = :processCode', { processCode: 'MP' })
           .andWhere('cs.tesSumId IS NULL')
           .andWhere('cs.qaCertEventId IS NULL')
@@ -133,28 +160,35 @@ export class SubmissionService {
           .andWhere('cs.rptPeriodId IS NULL')
           .getOne();
 
+        this.logger.log(`Retrieved severity code of ${cs?.severityCode} from CheckSession`,);
         mpRecord.severityCode = cs?.severityCode || 'NONE';
 
-        await this.returnManager().save(mpRecord);
-        await this.returnManager().save(mp);
+        await entityManager.save(mpRecord);
+        await entityManager.save(mp);
+
+        //Push queueing stage here
+        queueingStages.push({ action: 'MP_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
 
-      for (const id of item.testSumIds) {
-        const ts: QaSuppData = await this.returnManager().findOneBy(
+      this.logger.log(`Queueing ${evaluationItem?.testSumIds?.length} test summary records.`,);
+      for (const id of evaluationItem.testSumIds) {
+        const ts: QaSuppData = await entityManager.findOneBy(
           QaSuppData,
           {
             testSumId: id,
           },
         );
 
+        this.logger.log(`Queueing test summary with ID ${id} ...`,);
         const tsRecord = new SubmissionQueue();
-        tsRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = tsRecord; // Keep reference for error handling
+        tsRecord.submissionSetIdentifier = setId;
         tsRecord.processCode = 'QA';
         tsRecord.statusCode = 'QUEUED';
         tsRecord.testSumIdentifier = id;
-        tsRecord.submittedOn = currentTime;
+        tsRecord.queuedTime = currentTime;
 
-        const cs: CheckSession = await this.returnManager().findOneBy(
+        const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
           {
             tesSumId: id,
@@ -162,58 +196,70 @@ export class SubmissionService {
         );
 
         tsRecord.severityCode = cs?.severityCode || 'NONE';
-        await this.returnManager().save(tsRecord);
+        await entityManager.save(tsRecord);
 
         if (ts) {
           ts.submissionAvailabilityCode = 'PENDING'; //TODO FIND SUPP RECORD CORRESPONDING
-          await this.returnManager().save(ts);
+          await entityManager.save(ts);
         }
+
+        //Push queueing stage here
+        queueingStages.push({ action: 'TEST_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
 
-      for (const id of item.qceIds) {
-        const qce: QaCertEvent = await this.returnManager().findOneBy(
+      this.logger.log(`Queueing ${evaluationItem?.qceIds?.length} QCE records.`,);
+      for (const id of evaluationItem.qceIds) {
+        const qce: QaCertEvent = await entityManager.findOneBy(
           QaCertEvent,
           { qaCertEventIdentifier: id },
         );
 
+        this.logger.log(`Queueing QCE with ID ${id} ...`);
         const qceRecord = new SubmissionQueue();
-        qceRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = qceRecord; // Keep reference for error handling
+        qceRecord.submissionSetIdentifier = setId;
         qceRecord.processCode = 'QA';
 
         qceRecord.statusCode = 'QUEUED';
 
         qceRecord.qaCertEventIdentifier = id;
-        qceRecord.submittedOn = currentTime;
+        qceRecord.queuedTime = currentTime;
 
-        const cs: CheckSession = await this.returnManager().findOneBy(
+        const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
           {
             qaCertEventId: id,
           },
         );
 
+        this.logger.log(`Queueing QCE with ID ${id} ...`,);
         qceRecord.severityCode = cs?.severityCode || 'NONE';
-        await this.returnManager().save(qceRecord);
+        await entityManager.save(qceRecord);
         if (qce) {
           qce.submissionAvailabilityCode = 'PENDING';
-          await this.returnManager().save(qce);
+          await entityManager.save(qce);
         }
+        //Push queueing stage here
+        queueingStages.push({ action: 'QCE_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
 
-      for (const id of item.teeIds) {
-        const tee: QaTee = await this.returnManager().findOneBy(QaTee, {
+      this.logger.log(`Queueing ${evaluationItem?.teeIds?.length} TEE records.`,);
+      for (const id of evaluationItem.teeIds) {
+        const tee: QaTee = await entityManager.findOneBy(QaTee, {
           testExtensionExemptionIdentifier: id,
         });
 
+        this.logger.log(`Queueing TEE with ID ${id} ...`,);
         const teeRecord = new SubmissionQueue();
-        teeRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = teeRecord; // Keep reference for error handling
+        teeRecord.submissionSetIdentifier = setId;
         teeRecord.processCode = 'QA';
         teeRecord.statusCode = 'QUEUED';
 
         teeRecord.testExtensionExemptionIdentifier = id;
-        teeRecord.submittedOn = currentTime;
+        teeRecord.queuedTime = currentTime;
 
-        const cs: CheckSession = await this.returnManager().findOneBy(
+        const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
           {
             testExtensionExemptionId: id,
@@ -221,106 +267,177 @@ export class SubmissionService {
         );
 
         teeRecord.severityCode = cs?.severityCode || 'NONE';
-        await this.returnManager().save(teeRecord);
+        await entityManager.save(teeRecord);
         if (tee) {
           tee.submissionAvailabilityCode = 'PENDING';
-          await this.returnManager().save(tee);
+          await entityManager.save(tee);
         }
+
+        //Push queueing stage here
+        queueingStages.push({ action: 'TEE_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
 
-      for (const periodAbr of item.emissionsReportingPeriods) {
-        const rp = await this.returnManager().findOneBy(ReportingPeriod, {
+      this.logger.log(`Queueing emissions with ${evaluationItem?.emissionsReportingPeriods?.length} reporting period(s).`,);
+      for (const periodAbr of evaluationItem.emissionsReportingPeriods) {
+        const rp = await entityManager.findOneBy(ReportingPeriod, {
           periodAbbreviation: periodAbr,
         });
 
-        const ee: EmissionEvaluation = await this.returnManager().findOneBy(
+        this.logger.log(`Queueing EM with ID ${rp?.rptPeriodIdentifier} and monPlanId ${evaluationItem?.monPlanId} ...`,);
+        const ee: EmissionEvaluation = await entityManager.findOneBy(
           EmissionEvaluation,
           {
-            monPlanIdentifier: item.monPlanId,
+            monPlanIdentifier: evaluationItem.monPlanId,
             rptPeriodIdentifier: rp.rptPeriodIdentifier,
           },
         );
 
         const emissionRecord = new SubmissionQueue();
-        emissionRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = emissionRecord; // Keep reference for error handling
+        emissionRecord.submissionSetIdentifier = setId;
         emissionRecord.processCode = 'EM';
 
         emissionRecord.statusCode = 'QUEUED';
 
         emissionRecord.rptPeriodIdentifier = rp.rptPeriodIdentifier;
-        emissionRecord.submittedOn = currentTime;
+        emissionRecord.queuedTime = currentTime;
 
-        const cs: CheckSession = await this.returnManager().findOneBy(
+        const cs: CheckSession = await entityManager.findOneBy(
           CheckSession,
           {
-            monPlanId: item.monPlanId,
+            monPlanId: evaluationItem.monPlanId,
             rptPeriodId: rp.rptPeriodIdentifier,
           },
         );
 
         emissionRecord.severityCode = cs?.severityCode || 'NONE';
 
-        await this.returnManager().save(emissionRecord);
+        await entityManager.save(emissionRecord);
         if (ee) {
           ee.submissionAvailabilityCode = 'PENDING';
-          await this.returnManager().save(ee);
+          await entityManager.save(ee);
         }
+
+        //Push queueing stage here
+        queueingStages.push({ action: 'EM_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
 
-      for (const matsId of item.matsBulkFiles) {
-        const mf = await this.returnManager().findOneBy(MatsBulkFile, {
+      this.logger.log(`Queueing ${evaluationItem?.matsBulkFiles?.length} MATS records.`,);
+      for (const matsId of evaluationItem.matsBulkFiles) {
+        const mf = await entityManager.findOneBy(MatsBulkFile, {
           id: matsId,
         });
 
+        this.logger.log(`Queueing MATS with ID ${matsId} ...`,);
         const matsRecord = new SubmissionQueue();
-        matsRecord.submissionSetIdentifier = set_id;
+        currentSubmissionQueue = matsRecord; // Keep reference for error handling
+        matsRecord.submissionSetIdentifier = setId;
         matsRecord.processCode = 'MATS';
 
         matsRecord.statusCode = 'QUEUED';
 
         matsRecord.matsBulkFileId = matsId;
-        matsRecord.submittedOn = currentTime;
+        matsRecord.queuedTime = currentTime;
 
         matsRecord.severityCode = 'NONE';
 
-        await this.returnManager().save(matsRecord);
+
+        await entityManager.save(matsRecord);
         if (mf) {
           mf.submissionAvailabilityCode = 'PENDING';
-          await this.returnManager().save(mf);
+          await entityManager.save(mf);
         }
+
+        //Push queueing stage here
+        queueingStages.push({ action: 'MATS_QUEUED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
       }
+
+      this.logger.log(`Successfully queued record. SetId: ${setId}, MonPlanId: ${evaluationItem?.monPlanId || 'N/A'}`,);
+
     } catch (e) {
-      console.log(e);
-      this.logger.log('Failed record queueing', {
-        monPlanId: item.monPlanId,
-      });
+      this.logger.error(`Failed to queue record. MonPlanId: ${evaluationItem?.monPlanId || 'N/A'}, Error: ${e.message}`,e.stack,);
+      this.logger.error(`Aborting transaction`);
+
+      // Attach submissionSet and currentSubmissionQueue to the error
+      e.submissionSet = submissionSet;
+      e.currentSubmissionQueue = currentSubmissionQueue;
+
+      throw e; //throw the exception so that the transaction is aborted.
     }
   }
 
-  async queueSubmissionRecords(params: SubmissionQueueDTO): Promise<void> {
+  async queueSubmissionRecords(submissionQueueParam: SubmissionQueueDTO): Promise<void> {
+    this.logger.log(
+      `Starting to queue submission records. UserId: ${submissionQueueParam?.userId || 'N/A'}, activityId: ${submissionQueueParam?.activityId || 'N/A'},  Items count: ${submissionQueueParam?.items?.length || 0}`,
+    );
+
     // Check to make sure the items are ready to be submitted.
     await Promise.all(
-      params.items.map(async (item) => {
+      submissionQueueParam.items.map(async (item) => {
         // Inactive plans must be submitted before active plans with common locations.
         await this.ensureRelatedInactivePlansSubmitted(item.monPlanId);
       }),
     );
 
-    let promises = [];
+    // Build submissionStages array
+    const queueingStages: { action: string; dateTime: string }[] = [];
+    //Push queueing stage here
+    queueingStages.push({ action: 'QUEUEING_STARTED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
-    for (const item of params.items) {
-      promises.push(
-        this.queueRecord(
-          params.userId,
-          params.userEmail,
-          params.activityId,
-          params.hasCritErrors,
-          item,
-        ),
+    const userId = submissionQueueParam.userId;
+    const userEmail = submissionQueueParam.userEmail;
+    const activityId = submissionQueueParam.activityId;
+    const hasCritErrors = submissionQueueParam.hasCritErrors;
+    const evaluationItems = submissionQueueParam.items;
+
+    try {
+
+      //wrap everything in a transaction to ensure that all records are queued or none are queued
+      await this.entityManager.transaction(async (transactionalEntityManager) => {
+        for (const evaluationItem of evaluationItems) {
+          await this.queueRecord(
+            userId,
+            userEmail,
+            activityId,
+            hasCritErrors,
+            evaluationItem,
+            transactionalEntityManager, // Pass the transactional EntityManager
+            queueingStages,
+          );
+        }
+      });
+
+      //Push queueing stage here
+      queueingStages.push({ action: 'QUEUEING_COMPLETED', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
+
+      this.logger.log(`Finished queueing submission records for UserId: ${submissionQueueParam?.userId || 'N/A'}`,);
+    } catch (error) {
+      this.logger.error(`Failed to queue submission records. UserId: ${submissionQueueParam?.userId || 'N/A'}, Error: ${error.message}`,error.stack,);
+
+      // Extract submissionSet and submissionQueue from the error
+      const submissionSet = error.submissionSet;
+      const currentSubmissionQueue = error.currentSubmissionQueue;
+
+      // Call ErrorHandlerService to send failure email
+      await this.errorHandlerService.handleQueueingError(
+        submissionSet,
+        currentSubmissionQueue,
+        queueingStages,
+        userEmail,
+        userId,
+        error,
+      );
+
+      // Throw error to API caller
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Failed to queue submission records',
+          message: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    await Promise.all(promises);
   }
 
   async getLastUpdated(

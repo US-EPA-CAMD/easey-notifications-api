@@ -19,7 +19,11 @@ import {
   EmSubmissionAccessUpdateDTO,
 } from '../dto/em-submission-access.dto';
 import { EmSubmissionAccessParamsDTO } from '../dto/em-submission-access.params.dto';
-import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
+import {
+  AuditLog,
+  RoleGuard,
+  User,
+} from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 
@@ -58,6 +62,10 @@ export class EmSubmissionAccessController {
   @ApiOperation({
     description: 'Creates an Emission Submission Access Record.',
   })
+  @AuditLog({
+    label: 'Emission Submission Access - Create',
+    responseBodyOutFields: '*',
+  })
   async createEmSubmissionAccess(
     @Body() payload: EmSubmissionAccessCreateDTO,
     @User() user: CurrentUser,
@@ -74,6 +82,10 @@ export class EmSubmissionAccessController {
   })
   @ApiOperation({
     description: 'Updates an Emission Submission Access Record.',
+  })
+  @AuditLog({
+    label: 'Emission Submission Access - Update',
+    responseBodyOutFields: '*',
   })
   async updateEmSubmissionAccess(
     @Param('id') id: number,

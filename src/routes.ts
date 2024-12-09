@@ -1,5 +1,3 @@
-import { Routes } from 'nest-router';
-
 import { BulkFileModule } from './bulk-file/bulk-file.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { LoggingModule } from './logging/logging.module';
@@ -16,7 +14,7 @@ import { EmSubmissionAccessModule } from './em-submission-access/em-submission-a
 import { SubmissionModule } from './submission/submission.module';
 import { MatsFileUploadModule } from './mats-file-upload/mats-file-upload.module';
 
-const routes: Routes = [
+const routes = [
   {
     path: '/bookmarks',
     module: BookmarkModule,

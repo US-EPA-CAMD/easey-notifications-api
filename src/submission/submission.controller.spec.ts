@@ -10,6 +10,7 @@ import { EmissionsLastUpdatedMap } from '../maps/emissions-last-updated.map';
 import { SubmissionProcessService } from './submission-process.service';
 import { SubmissionController } from './submission.controller';
 import { SubmissionService } from './submission.service';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 jest.mock('./submission.service');
 jest.mock('./submission-process.service');
@@ -19,7 +20,7 @@ describe('-- Submission Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [HttpModule, LoggerModule],
       controllers: [SubmissionController],
       providers: [
         {
@@ -41,7 +42,7 @@ describe('-- Submission Controller --', () => {
     expect(controller).toBeDefined();
   });
 
-  it('evaluate', async () => {
+  it('should evaluate', async () => {
     const dtoParams = new SubmissionQueueDTO();
 
     expect(async () => {

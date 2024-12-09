@@ -6,7 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { Body, Controller, Post, UseGuards, Get, Query } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { SubmissionQueueDTO } from '../dto/submission-queue.dto';
 import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
@@ -44,6 +44,11 @@ export class SubmissionController {
     { bodyParam: 'items.*.monPlanId', requiredRoles: ['Submitter', 'Sponsor', 'Initial Authorizer'] },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Creates Submission Queue',
+    requestBodyOutFields:'*',
+    omitFields:['userEmail']
+  })
   async queue(@Body() params: SubmissionQueueDTO): Promise<void> {
     await this.service.queueSubmissionRecords(params);
   }
