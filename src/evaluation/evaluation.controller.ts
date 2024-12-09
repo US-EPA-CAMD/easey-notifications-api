@@ -1,7 +1,7 @@
 import { ApiTags, ApiSecurity, ApiOkResponse, ApiOperation, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { RoleGuard, AuditLog } from '@us-epa-camd/easey-common/decorators';
 import { EvaluationDTO } from '../dto/evaluation.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { EvalErrorParamsDTO } from '../dto/eval-error-params.dto';
@@ -28,6 +28,11 @@ export class EvaluationController {
     },
     LookupType.MonitorPlan,
   )
+  @AuditLog({
+    label: 'Creates Evaluation Queue',
+    requestBodyOutFields:'*',
+    omitFields:['userEmail']
+  })
   async evaluate(@Body() params: EvaluationDTO): Promise<void> {
     await this.service.queueEvaluationRecords(params);
   }

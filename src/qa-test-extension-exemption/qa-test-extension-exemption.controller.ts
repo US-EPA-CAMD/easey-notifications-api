@@ -62,7 +62,7 @@ export class QaTestExtensionExemptionController {
   })
   @AuditLog({
     label: 'QA Test Extension Exemption Maintenance - Require Resubmission',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   updateSubmissionStatus(
     @Param('id') id: string,
@@ -86,7 +86,7 @@ export class QaTestExtensionExemptionController {
   })
   @AuditLog({
     label: 'QA Test Extension Exemption Maintenance - Delete',
-    outFields: '*',
+    responseBodyOutFields: '*',
   })
   async deleteQACertTeeData(@Param('id') id: string): Promise<any> {
     return this.service.deleteQACertTeeData(id);
