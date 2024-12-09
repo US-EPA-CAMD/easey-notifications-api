@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <title>Evaluation Error - Support Notification</title>
+  <title>Submission Queueing Error - Support Notification</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,20 +26,20 @@
 <div class="content">
   <p>Dear ECMPS Support Team,</p>
   <p>
-    An error occurred while processing an evaluation.
+    An error occurred while queuing a submission for processing.
   </p>
   <p>
-    <strong>Evaluation ID:</strong> {{evaluationId}}<br>
+    <strong>Submission ID:</strong> {{submissionId}}<br>
     <strong>Oris Code:</strong> {{orisCode}}<br>
     <strong>Location:</strong> {{configuration}}<br>
     <strong>Year/Quarter:</strong> {{yearQtr}}<br>
-    <strong>Date/Time:</strong> {{evaluationQueueDateDisplay}}<br>
+    <strong>Date/Time:</strong> {{submissionDateDisplay}}<br>
   </p>
   <p>
     <strong>Submitter:</strong> {{submitter}}<br>
   </p>
   <p>
-    <strong>EVALUATION_STAGE_LOG Data:</strong>
+    <strong>QUEUEING_STAGE_LOG Data:</strong>
   </p>
   <p>
     {{#each stages}}
