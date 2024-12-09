@@ -3,11 +3,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 
 import { NumericColumnTransformer } from '@us-epa-camd/easey-common/transforms';
+import { MonitorPlan } from './monitor-plan.entity';
 import { StackPipe } from './stack-pipe.entity';
 import { Unit } from './unit.entity';
 
@@ -42,4 +44,7 @@ export class MonitorLocation extends BaseEntity {
   @OneToOne(() => Unit, (o) => o.location, { eager: true })
   @JoinColumn({ name: 'unit_id' })
   unit: Unit;
+
+  @ManyToMany(() => MonitorPlan, (plan) => plan.locations)
+  plans: MonitorPlan[];
 }
