@@ -10,8 +10,8 @@ export class SubmissionSet extends BaseEntity {
   @Column({ name: 'mon_plan_id' })
   monPlanIdentifier: string;
 
-  @Column({ name: 'submitted_on' })
-  submittedOn: Date;
+  @Column({ name: 'queued_time' })
+  queuedTime: Date;
 
   @Column({ name: 'user_id' })
   userIdentifier: string;
@@ -45,11 +45,17 @@ export class SubmissionSet extends BaseEntity {
   @Column({ name: 'status_cd' })
   statusCode: string;
 
-  @Column({ name: 'details' })
-  details: string;
+  @Column({ name: 'started_time' })
+  startedTime?: Date;
 
-  @Column({ name: 'submission_end_stage_time' })
-  endStageTime: Date;
+  @Column({ name: 'completed_time' })
+  completedTime?: Date;
+
+  @Column({ name: 'note' })
+  note?: string;
+
+  @Column({ name: 'note_time' })
+  noteTime?: Date;
 
   @Column({ name: 'has_crit_errors' })
   hasCritErrors: boolean;

@@ -7,7 +7,7 @@ export class SubmissionEmailParamsDto {
 
   processCode           : string;
   submissionSet         : SubmissionSet;
-  submissionRecords     : SubmissionQueue [];
+  submissionQueueRecords: SubmissionQueue [];
   highestSeverityRecord : HighestSeverityRecord;
 
   //Facility Information
@@ -25,10 +25,7 @@ export class SubmissionEmailParamsDto {
   toEmail: string;
   ccEmail : string;
   fromEmail: string;
-  subjectEmail: string;
   epaAnalystLink: string;
-  isSubmissionFailure: boolean;
-  submissionError: string;
 
   constructor(init?: Partial<SubmissionEmailParamsDto>) {
     Object.assign(this, init);
@@ -56,10 +53,6 @@ export function hasNonNoneSeverity(record: HighestSeverityRecord): boolean {
   return !isNoError(record);
 }
 
-export type KeyValuePairs = {
-  [key: string]: string | { label: string; url: string };
-};
-
 export class SubmissionFeedbackEmailData {
   constructor(
     public toEmail: string,
@@ -69,6 +62,8 @@ export class SubmissionFeedbackEmailData {
     public emailTemplate: string,
     public templateContext: any,
     public feedbackAttachmentDocuments: any[],
+    public submissionSet : SubmissionSet,
+    public submissionQueueRecords : SubmissionQueue [],
+    public processCode : string,
   ) {}
 }
-
