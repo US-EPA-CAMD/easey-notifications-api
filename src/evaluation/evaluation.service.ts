@@ -38,7 +38,7 @@ export class EvaluationService {
       evaluationSet.monPlanIdentifier = item.monPlanId;
       evaluationSet.userIdentifier = userId;
       evaluationSet.userEmail = userEmail;
-      evaluationSet.submittedOn = currentTime;
+      evaluationSet.queuedTime = currentTime;
 
       const locations = await this.returnManager().query(
         `SELECT camdecmpswks.get_mp_location_list($1);`,
