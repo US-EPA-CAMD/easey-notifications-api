@@ -218,7 +218,7 @@ export class MailEvalService {
           (await this.returnManager().findOneBy(QaTee,
             {
               testExtensionExemptionIdentifier:
-                tee.testExtensionExemptionIdentifier,
+              tee.testExtensionExemptionIdentifier,
             },
           ));
         const reportPeriodInfo =

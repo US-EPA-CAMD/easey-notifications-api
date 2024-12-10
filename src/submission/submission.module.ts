@@ -27,7 +27,7 @@ import { SubmissionEmailService } from './submission-email.service';
     CombinedSubmissionsMap,
     EmissionsLastUpdatedMap,
     RecipientListService,
-    DocumentService, //DocumentService
+    DocumentService,
     ErrorHandlerService,
     SubmissionSetHelperService,
     SubmissionTemplateService,
