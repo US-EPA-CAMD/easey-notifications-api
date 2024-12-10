@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { EntityManager } from 'typeorm';
 import { Logger } from '@us-epa-camd/easey-common/logger';
 import { of } from 'rxjs';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosHeaders } from 'axios';
 
 describe('RecipientListService', () => {
   let service: RecipientListService;
@@ -82,7 +82,7 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' },
+        config: { method: 'post', headers: {} as AxiosHeaders },
       };
 
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
@@ -97,7 +97,7 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'post' },
+        config: { method: 'post', headers: {} as AxiosHeaders },
       };
 
       jest.spyOn(httpService, 'post').mockReturnValue(of(mockResponse) as any);
@@ -131,10 +131,12 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'GET' },
+        config: { method: 'GET', headers: {} as AxiosHeaders },
       };
 
-      jest.spyOn(httpService, 'request').mockReturnValue(of(mockResponse) as any);
+      jest
+        .spyOn(httpService, 'request')
+        .mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
       const result = await service.getEmailRecipients('', '', '', '', '');
@@ -157,10 +159,12 @@ describe('RecipientListService', () => {
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: { method: 'GET' },
+        config: { method: 'GET', headers: {} as AxiosHeaders },
       };
 
-      jest.spyOn(httpService, 'request').mockReturnValue(of(mockResponse) as any);
+      jest
+        .spyOn(httpService, 'request')
+        .mockReturnValue(of(mockResponse) as any);
       jest.spyOn(service, 'getClientToken').mockResolvedValue('mockToken');
 
       const result = await service.getEmailRecipients('', '', '', '', '');
@@ -184,6 +188,5 @@ describe('RecipientListService', () => {
         'API Error With Logging',
       );
     });
-
   });
 });

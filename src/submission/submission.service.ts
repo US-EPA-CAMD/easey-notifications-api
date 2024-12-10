@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { Logger } from '@us-epa-camd/easey-common/logger';
-import { EntityManager, MoreThanOrEqual } from 'typeorm';
+import { EntityManager, In, MoreThanOrEqual, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EvaluationItem } from '../dto/evaluation.dto';
@@ -34,6 +35,40 @@ export class SubmissionService {
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly submissionSetHelper: SubmissionSetHelperService,
   ) {}
+
+  private async ensureRelatedInactivePlansSubmitted(monPlanId: string) {
+    const mp = await this.returnManager().findOne(MonitorPlan, {
+      where: { monPlanIdentifier: monPlanId },
+      relations: { locations: true },
+    });
+    if (!mp) {
+      throw new EaseyException(
+        new Error('Monitoring plan not found.'),
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isActive = mp.endRPTPeriodIdentifier === null;
+
+    const existsUnsubmittedInactive =
+      (await this.returnManager().countBy(MonitorPlan, {
+        facIdentifier: mp.facIdentifier,
+        locations: {
+          monLocIdentifier: In(mp.locations.map((loc) => loc.monLocIdentifier)),
+        },
+        monPlanIdentifier: Not(mp.monPlanIdentifier),
+        submissionAvailabilityCode: Not('UPDATED'),
+      })) > 0;
+
+    if (isActive && existsUnsubmittedInactive) {
+      throw new EaseyException(
+        new Error(
+          'Inactive monitoring plans for at least one of the locations in the current monitoring plan need to be submitted prior to submitting the current, active monitoring plan.',
+        ),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
   returnManager() {
     return this.entityManager;
@@ -334,6 +369,14 @@ export class SubmissionService {
   async queueSubmissionRecords(submissionQueueParam: SubmissionQueueDTO): Promise<void> {
     this.logger.log(
       `Starting to queue submission records. UserId: ${submissionQueueParam?.userId || 'N/A'}, activityId: ${submissionQueueParam?.activityId || 'N/A'},  Items count: ${submissionQueueParam?.items?.length || 0}`,
+    );
+
+    // Check to make sure the items are ready to be submitted.
+    await Promise.all(
+      submissionQueueParam.items.map(async (item) => {
+        // Inactive plans must be submitted before active plans with common locations.
+        await this.ensureRelatedInactivePlansSubmitted(item.monPlanId);
+      }),
     );
 
     // Build submissionStages array

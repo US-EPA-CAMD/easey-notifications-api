@@ -10,7 +10,6 @@ export class SubmissionSet extends BaseEntity {
   @Column({ name: 'mon_plan_id' })
   monPlanIdentifier: string;
 
-  //The time the submission is queued at
   @Column({ name: 'queued_time' })
   queuedTime: Date;
 
