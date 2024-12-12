@@ -1,5 +1,5 @@
 import { Controller, Res, StreamableFile, Get, Query } from '@nestjs/common';
-import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CopyOfRecordService } from './copy-of-record.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
@@ -39,6 +39,7 @@ export class CopyOfRecordController {
   }
 
   @Get('workspace/copy-of-record')
+  @ApiExcludeEndpoint()
   @ApiQuery({
     style: 'pipeDelimited',
     name: 'testId',

@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiExcludeEndpoint, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { MatsFileUploadService } from './mats-file-upload.service';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -27,6 +27,7 @@ export class MatsFileUploadController {
   ) {}
 
   @Post(':monPlanId/:locId/:testGroupCode/:testNumber/import')
+  @ApiExcludeEndpoint()
   @ApiConsumes('multipart/form-data')
   @RoleGuard(
     {

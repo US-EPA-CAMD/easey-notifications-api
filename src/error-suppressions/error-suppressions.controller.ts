@@ -21,12 +21,11 @@ import { ErrorSuppressionsService } from './error-suppressions.service';
 import { ErrorSuppressionsDTO } from '../dto/error-suppressions.dto';
 import { ErrorSuppressionsParamsDTO } from '../dto/error-suppressions.params.dto';
 import { ErrorSuppressionsPayloadDTO } from '../dto/error-suppressions-payload.dto';
-import {
-  ApiExcludeControllerByEnv,
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import {
+  ApiExcludeControllerByEnv, BadRequestResponse,
+  NotFoundResponse,
+} from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')

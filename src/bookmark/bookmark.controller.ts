@@ -28,7 +28,7 @@ import { BookmarkService } from './bookmark.service';
 import { BoomarkPayloadDTO } from '../dto/bookmark-payload.dto';
 import { BookmarkCreatedDTO } from '../dto/bookmark-created.dto';
 import { BookmarkDTO } from '../dto/bookmark.dto';
-import { ApiExcludeControllerByEnv } from '../utilities/swagger-decorator.const';
+import { ApiExcludeControllerByEnv } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')

@@ -8,15 +8,13 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
+  ApiExcludeEndpoint,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 import { QaCertEventService } from './qa-cert-event.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -54,6 +52,7 @@ export class QaCertEventController {
   }
 
   @Put(':id')
+  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,
@@ -77,6 +76,7 @@ export class QaCertEventController {
   }
 
   @Delete(':id')
+  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,

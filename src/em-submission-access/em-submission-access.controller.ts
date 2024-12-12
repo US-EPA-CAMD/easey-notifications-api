@@ -8,10 +8,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  ApiExcludeControllerByEnv,
-  BadRequestResponse,
+  ApiExcludeControllerByEnv, BadRequestResponse,
   NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
+} from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 import { EmSubmissionAccessService } from './em-submission-access.service';
 import {
   EmSubmissionAccessCreateDTO,

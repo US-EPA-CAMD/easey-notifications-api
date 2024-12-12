@@ -8,15 +8,12 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
+  ApiExcludeEndpoint,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
 import { QaTestSummaryService } from './qa-test-summary.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -25,6 +22,7 @@ import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaTestSummaryMaintViewDTO } from '../dto/qa-test-summary-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Data Maintenance')
@@ -52,6 +50,7 @@ export class QaTestSummaryController {
   }
 
   @Put(':id')
+  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,
@@ -75,6 +74,7 @@ export class QaTestSummaryController {
   }
 
   @Delete(':id')
+  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,

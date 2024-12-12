@@ -1,4 +1,11 @@
-import { ApiTags, ApiSecurity, ApiOkResponse, ApiOperation, ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiSecurity,
+  ApiOkResponse,
+  ApiOperation,
+  ApiInternalServerErrorResponse,
+  ApiExcludeEndpoint,
+} from '@nestjs/swagger';
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { RoleGuard, AuditLog } from '@us-epa-camd/easey-common/decorators';
@@ -18,6 +25,7 @@ export class EvaluationController {
   ) {}
 
   @Post('evaluate')
+  @ApiExcludeEndpoint()
   @ApiOkResponse({
     description: 'Creates evaluation queue records for quartz',
   })

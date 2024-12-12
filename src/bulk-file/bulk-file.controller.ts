@@ -14,7 +14,6 @@ import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 import { BulkFileDTO } from '../dto/bulk_file.dto';
 import { BulkFileService } from './bulk-file.service';
 import { BulkFileInputDTO } from '../dto/bulk_file_input.dto';
-import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 import {
   ApportionedEmissionsQuarterlyDTO,
   ApportionedEmissionsStateDTO,
@@ -22,6 +21,7 @@ import {
   TimePeriodDTO,
 } from '../dto/bulk-file-mass-generation.dto';
 import { MassBulkFileService } from './mass-bulk-file.service';
+import { ApiExcludeEndpointByEnv } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
 
 @Controller()
 @ApiSecurity('APIKey')
