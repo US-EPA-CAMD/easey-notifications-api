@@ -4,7 +4,7 @@ import {
   ApiSecurity,
   ApiOkResponse,
   ApiBearerAuth,
-  ApiOperation, ApiExcludeEndpoint,
+  ApiOperation, ApiExcludeController,
 } from '@nestjs/swagger';
 
 import { Get, Query, Controller, UseGuards } from '@nestjs/common';
@@ -20,6 +20,7 @@ import { ReportParamsDTO } from '../dto/report-params.dto';
 @ApiSecurity('APIKey')
 @UseGuards(AuthGuard)
 @ApiBearerAuth('Token')
+@ApiExcludeController()
 export class ReportWorkspaceController {
   constructor(private service: DataSetService) {}
 
@@ -31,7 +32,6 @@ export class ReportWorkspaceController {
   @ApiOperation({
     description: 'Retrieves list of workspace reports available.',
   })
-  @ApiExcludeEndpoint()
   async getAvailableReports() {
     return this.service.getAvailableDataSets();
   }
@@ -51,7 +51,6 @@ export class ReportWorkspaceController {
     required: false,
     explode: false,
   })
-  @ApiExcludeEndpoint()
   async getReport(@Query() params: ReportParamsDTO) {
     return this.service.getDataSet(params, true);
   }

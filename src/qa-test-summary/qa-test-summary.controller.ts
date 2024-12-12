@@ -8,7 +8,7 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
-  ApiExcludeEndpoint,
+  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
@@ -26,6 +26,7 @@ import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Data Maintenance')
+@ApiExcludeController()
 export class QaTestSummaryController {
   constructor(private service: QaTestSummaryService) {}
 
@@ -50,7 +51,6 @@ export class QaTestSummaryController {
   }
 
   @Put(':id')
-  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,
@@ -74,7 +74,6 @@ export class QaTestSummaryController {
   }
 
   @Delete(':id')
-  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,

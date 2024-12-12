@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiExcludeEndpoint, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiExcludeController, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { MatsFileUploadService } from './mats-file-upload.service';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
 import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -20,6 +20,7 @@ const MAX_UPLOAD_SIZE_MB: number = 30;
 @Controller()
 @ApiTags('MATs File Upload')
 @ApiSecurity('APIKey')
+@ApiExcludeController()
 export class MatsFileUploadController {
   constructor(
     private configService: ConfigService,
@@ -27,7 +28,6 @@ export class MatsFileUploadController {
   ) {}
 
   @Post(':monPlanId/:locId/:testGroupCode/:testNumber/import')
-  @ApiExcludeEndpoint()
   @ApiConsumes('multipart/form-data')
   @RoleGuard(
     {

@@ -2,7 +2,7 @@ import {
   ApiTags,
   ApiSecurity,
   ApiOkResponse,
-  ApiBearerAuth, ApiExcludeEndpoint,
+  ApiBearerAuth, ApiExcludeController,
 } from '@nestjs/swagger';
 import { Body, Controller, Post, UseGuards, Get, Query } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
@@ -17,6 +17,7 @@ import { SubmissionsLastUpdatedResponseDTO } from '../dto/submission-last-update
 @Controller()
 @ApiTags('Submission')
 @ApiSecurity('APIKey')
+@ApiExcludeController()
 export class SubmissionController {
   constructor(
     private service: SubmissionService,
@@ -36,7 +37,6 @@ export class SubmissionController {
   }
 
   @Post('queue')
-  @ApiExcludeEndpoint()
   @ApiOkResponse({
     description:
       'Creates submission queue records for quartz copy of record process',
@@ -55,7 +55,6 @@ export class SubmissionController {
   }
 
   @Post('process')
-  @ApiExcludeEndpoint()
   @ApiOkResponse({
     description:
       'Creates copy of record and calls into submission sign service',

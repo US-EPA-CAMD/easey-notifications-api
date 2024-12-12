@@ -8,7 +8,7 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
-  ApiExcludeEndpoint,
+  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
@@ -26,6 +26,7 @@ import { LookupType } from '@us-epa-camd/easey-common/enums';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Extension Exemption Maintenance')
+@ApiExcludeController()
 export class QaTestExtensionExemptionController {
   constructor(private service: QaTestExtensionExemptionService) {}
 
@@ -48,7 +49,6 @@ export class QaTestExtensionExemptionController {
   }
 
   @Put(':id')
-  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,
@@ -72,7 +72,6 @@ export class QaTestExtensionExemptionController {
   }
 
   @Delete(':id')
-  @ApiExcludeEndpoint()
   @RoleGuard({ requiredRoles: ['ECMPS Admin'] }, LookupType.MonitorPlan)
   @ApiOkResponse({
     isArray: false,

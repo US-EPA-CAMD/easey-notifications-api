@@ -1,5 +1,5 @@
 import { Controller, Res, StreamableFile, Get, Query } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CopyOfRecordService } from './copy-of-record.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
@@ -9,6 +9,7 @@ import { LookupType } from '@us-epa-camd/easey-common/enums';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Copy of Record')
+@ApiExcludeController()
 export class CopyOfRecordController {
   constructor(private service: CopyOfRecordService) {}
 
@@ -39,7 +40,6 @@ export class CopyOfRecordController {
   }
 
   @Get('workspace/copy-of-record')
-  @ApiExcludeEndpoint()
   @ApiQuery({
     style: 'pipeDelimited',
     name: 'testId',
