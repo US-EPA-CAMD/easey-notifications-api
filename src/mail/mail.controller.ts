@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
+import { AuditLog } from '@us-epa-camd/easey-common/decorators';
 
 import { MailService } from './mail.service';
 import { CreateMailDto } from '../dto/create-mail.dto';
@@ -39,6 +40,10 @@ export class MailController {
       'Sends an email to a CAMD support inbox determined by the Client Id.',
   })
   @ApiInternalServerErrorResponse()
+  @AuditLog({
+    label:'Contact us email sent',
+    requestHeadersOutFields: ['x-client-id']
+  })
   async send(@Body() payload: CreateMailDto, @ClientId() clientId: string) {
     await this.mailService.sendEmail(clientId, payload);
   }
@@ -52,6 +57,11 @@ export class MailController {
       'Processes an email using the associated email record stored in the email_queue',
   })
   @ApiInternalServerErrorResponse()
+  @AuditLog({
+    label:'Email processed',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: ['emailToProcessId']
+  })
   async sendRecord(@Body() payload: ProcessMailDTO) {
     await this.mailTemplateService.sendEmailRecord(payload.emailToProcessId);
   }
@@ -65,6 +75,11 @@ export class MailController {
       'Sends an email to a CAMD support inbox determined by the Client Id.',
   })
   @ApiInternalServerErrorResponse()
+  @AuditLog({
+    label:'Mass evaluation email sent',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: ['evaluationSetId']
+  })
   async sendMassEval(@Body() payload: MassEvalParamsDTO) {
     await this.mailEvalService.sendMassEvalEmail(
       payload.toEmail,
