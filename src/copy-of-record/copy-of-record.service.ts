@@ -230,7 +230,8 @@ export class CopyOfRecordService {
           parseInt(templateType.charAt(0)),
           isTest,
         );
-        if (evalStatusCodes.size == 1 && evalStatusCodes.has('PASS')) {
+        //only 1 detail object in deta.details means the report does not have any errors
+        if (data.details.length === 1) {
           innerContent += this.addEvaluationPassTable();
         }
       } else {

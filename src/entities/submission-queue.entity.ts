@@ -39,7 +39,6 @@ export class SubmissionQueue extends BaseEntity {
   @Column({ name: 'severity_cd' })
   severityCode: string;
 
-  //The time the submission is queued at
   @Column({ name: 'queued_time' })
   queuedTime: Date;
 

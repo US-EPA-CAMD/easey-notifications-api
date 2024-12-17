@@ -67,4 +67,3 @@ export class SubmissionFeedbackEmailData {
     public processCode : string,
   ) {}
 }
-

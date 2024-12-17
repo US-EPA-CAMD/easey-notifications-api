@@ -60,7 +60,7 @@ export default registerAs('app', () => ({
   ),
   defaultFromEmail: getConfigValue(
     'EASEY_CAMD_SERVICES_DEFAULT_FROM_EMAIL',
-    'noreply@epa.gov',
+    'ecmps@epa.gov',
   ),
   cdxUrl: getConfigValue(
     'EASEY_CAMD_SERVICES_CDX_URL',

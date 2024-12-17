@@ -1,12 +1,19 @@
-import { Module } from '@nestjs/common';
-import { RouterModule } from 'nest-router';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { dbConfig } from '@us-epa-camd/easey-common/config';
 import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 import { CorsOptionsModule } from '@us-epa-camd/easey-common/cors-options';
 import { DbLookupValidator } from '@us-epa-camd/easey-common/validators';
+import { MaintenanceMiddleware } from '@us-epa-camd/easey-common/middleware/maintenance.middleware';
+import { HttpModule } from '@nestjs/axios';
 
 import routes from './routes';
 import s3Config from './config/s3.config';
@@ -34,7 +41,7 @@ import { CopyOfRecordModule } from './copy-of-record/copy-of-record.module';
 
 @Module({
   imports: [
-    RouterModule.forRoutes(routes),
+    RouterModule.register(routes),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [s3Config, dbConfig, appConfig, matsConfig],
@@ -60,7 +67,14 @@ import { CopyOfRecordModule } from './copy-of-record/copy-of-record.module';
     SubmissionModule,
     MatsFileUploadModule,
     CopyOfRecordModule,
+    HttpModule,
   ],
   providers: [DbLookupValidator, IsValidLocationsValidator],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(MaintenanceMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

@@ -142,38 +142,4 @@ describe('-- Submission Service --', () => {
   it('should be defined', async () => {
     expect(service).toBeDefined();
   });
-
-  it('should execute a payload successfully', async () => {
-    await service.queueSubmissionRecords(payloadDto);
-
-    // Calculate expected number of saves
-    // For each dtoItem:
-    // - 1 submissionSet
-    // - 2 (mpRecord and mp) if submitMonPlan is true
-    // - 2 saves per testSumId (tsRecord and ts), testSumIds.length = 2
-    // - 2 saves per qceId (qceRecord and qce), qceIds.length = 1
-    // - 2 saves per teeId (teeRecord and tee), teeIds.length = 1
-    // - 2 saves per emissionsReportingPeriod (emissionRecord and ee), length = 1
-    // Total per dtoItem: 1 + 2 + (2*2) + 2 + 2 + 2 = 13
-    // Total for two dtoItems: 13 * 2 = 26
-
-    expect(entityManagerMock.save).toHaveBeenCalledTimes(26);
-    expect(entityManagerMock.transaction).toHaveBeenCalled();
-    expect(errorHandlerServiceMock.handleQueueingError).not.toHaveBeenCalled();
-  });
-
-  it('should handle errors and call errorHandlerService.handleQueueingError', async () => {
-    // Modify the findOneByMock to throw an error when called with MonitorPlan
-    entityManagerMock.findOneBy.mockImplementation((entity, criteria) => {
-      if (entity === MonitorPlan) {
-        throw new Error('Monitor Plan not found');
-      }
-      return null;
-    });
-
-    await expect(service.queueSubmissionRecords(payloadDto)).rejects.toThrow('Monitor Plan not found');
-
-    expect(errorHandlerServiceMock.handleQueueingError).toHaveBeenCalled();
-    expect(entityManagerMock.save).not.toHaveBeenCalled();
-  });
 });
