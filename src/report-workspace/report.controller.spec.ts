@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { EntityManager } from 'typeorm';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
 
 import { DataSetRepository } from '../dataset/dataset.repository';
 import { DataSetService } from '../dataset/dataset.service';
@@ -15,7 +16,7 @@ describe('-- Report Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [LoggerModule, HttpModule],
       controllers: [ReportWorkspaceController],
       providers: [
         ConfigService,
