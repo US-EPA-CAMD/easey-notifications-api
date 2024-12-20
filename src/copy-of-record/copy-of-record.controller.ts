@@ -3,7 +3,7 @@ import { ApiExcludeController, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/sw
 import { CopyOfRecordService } from './copy-of-record.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 
 @Controller()
@@ -66,6 +66,10 @@ export class CopyOfRecordController {
     },
     LookupType.Facility,
   )
+  @AuditLog({
+    label:'Copy of record retrieved from workspace',
+    requestQueryOutFields: '*'
+  })
   generatePdfWorkspace(
     @Query() params: ReportParamsDTO,
     @Res({ passthrough: true }) res: Response,

@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { LoggerModule } from '@us-epa-camd/easey-common/logger';
+
 import { BulkFileService } from './bulk-file.service';
 import { BulkFileController } from './bulk-file.controller';
 import { ConfigService } from '@nestjs/config';
@@ -22,7 +24,7 @@ describe('-- Bulk File Controller --', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [LoggerModule, HttpModule],
       controllers: [BulkFileController],
       providers: [ConfigService, BulkFileService, MassBulkFileService],
     }).compile();
