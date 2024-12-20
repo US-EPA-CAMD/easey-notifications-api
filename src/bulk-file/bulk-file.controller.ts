@@ -21,7 +21,7 @@ import {
   TimePeriodDTO,
 } from '../dto/bulk-file-mass-generation.dto';
 import { MassBulkFileService } from './mass-bulk-file.service';
-import { ApiExcludeEndpointByEnv } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
+import { ApiExcludeEndpointByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')

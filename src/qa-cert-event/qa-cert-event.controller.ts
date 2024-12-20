@@ -14,7 +14,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 import { QaCertEventService } from './qa-cert-event.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';

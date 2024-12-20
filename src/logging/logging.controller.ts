@@ -10,7 +10,7 @@ import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { LoggingService } from './logging.service';
 import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 import { ServerErrorDto } from '../dto/server-error.dto';
-import { ApiExcludeControllerByEnv } from '@us-epa-camd/easey-common/utilities/swagger-decorator.const';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Logging')
