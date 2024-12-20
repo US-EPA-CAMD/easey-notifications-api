@@ -83,7 +83,7 @@ export class ErrorHandlerService {
 
       // Email subject
       const processCode = currentSubmissionQueue?.processCode || 'N/A';
-      const emailSubject = `${processCode} Feedback for ORIS code ${emailTemplateContext.orisCode} Unit ${emailTemplateContext.configuration}`;
+      const emailSubject = this.buildEmailSubject(processCode, emailTemplateContext.orisCode, emailTemplateContext.configuration);
 
       // Send failure email to user
       await this.sendEmail(
@@ -173,7 +173,7 @@ export class ErrorHandlerService {
 
       // Email subject
       const processCode = emailTemplateContextForUser.processCode || 'N/A';
-      const emailSubject = `${processCode} Feedback for ORIS code ${emailTemplateContextForUser.orisCode} Unit ${emailTemplateContextForUser.configuration}`;
+      const emailSubject = this.buildEmailSubject(processCode, emailTemplateContextForUser.orisCode, emailTemplateContextForUser.configuration);
 
       // Send email to user
       await this.sendEmail(
@@ -383,5 +383,11 @@ export class ErrorHandlerService {
     } else {
       this.logger.warn('Destination email is not provided; skipping processing failure email.');
     }
+  }
+
+  private buildEmailSubject(processCode: string, orisCode: string, configuration: string): string {
+    const env = this.configService.get<string>('app.env')?.trim()?.toLowerCase();
+    const subjectSuffix = env && !['prod', 'production', ''].includes(env) ? ` (sent from ECMPS 2.0 ${env})` : '';
+    return `${processCode} Feedback for ORIS code ${orisCode} Unit ${configuration} ${subjectSuffix}`;
   }
 }
