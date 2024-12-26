@@ -32,7 +32,7 @@ export class SubmissionTransactionService {
   async buildTransactions(set: SubmissionSet, records: SubmissionQueue[], folderPath: string): Promise<any[]> {
 
     let transactions: any[] = [];
-    this.logger.log(`building transactions...`);
+    this.logger.debug(`building transactions...`);
     for (const record of records) {
       switch (record.processCode) {
         case 'MP':

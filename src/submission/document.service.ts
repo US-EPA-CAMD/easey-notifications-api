@@ -29,18 +29,18 @@ export class DocumentService {
     const documents = [];
 
     // Build evaluation reports for each file type.
-    this.logger.log(`Adding evaluation reports`);
+    this.logger.debug(`Adding evaluation reports`);
     await this.addEvalReports(set, records, documents);
 
     // Build copy of records
     await this.buildCopyOfRecords(set, records, documents);
 
     // Add certification statements
-    this.logger.log(`Adding certification statements`);
+    this.logger.debug(`Adding certification statements`);
     await this.addCertificationStatements(set, documents);
 
     // Write documents to files.
-    this.logger.log(`Writing documents to files...`);
+    this.logger.debug(`Writing documents to files...`);
     for (const doc of documents) {
       writeFileSync(`${folderPath}/${doc.documentTitle}.html`, doc.context);
     }
@@ -243,6 +243,6 @@ export class DocumentService {
       ),
     );
 
-    this.logger.log('Documents sent for signing successfully.');
+    this.logger.debug('Documents sent for signing successfully.');
   }
 }

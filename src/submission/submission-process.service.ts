@@ -28,7 +28,7 @@ export class SubmissionProcessService {
   ) {}
 
   async processSubmissionSet(id: string): Promise<void> {
-    this.logger.log(`Processing submission set: ${id}`);
+    this.logger.debug(`Processing submission set: ${id}`);
 
     let set: SubmissionSet;
     let submissionQueueRecords: SubmissionQueue[];
@@ -50,7 +50,7 @@ export class SubmissionProcessService {
       await this.submissionSetHelper.updateSubmissionSetStatus(set, 'WIP');
       submissionQueueRecords = await this.entityManager.find(SubmissionQueue, { where: { submissionSetIdentifier: id },});
       await this.submissionSetHelper.setRecordStatusCode(set, submissionQueueRecords, 'WIP', '', 'PENDING');
-      this.logger.log(`Updating submission records to IP status.`);
+      this.logger.debug(`Updating submission records to IP status.`);
 
       //Push the submission stage here
       submissionStages.push({ action: 'SET_STATUS_WIP', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
@@ -60,17 +60,17 @@ export class SubmissionProcessService {
 
       // Build transactions
       const transactions = await this.transactionService.buildTransactions(set, submissionQueueRecords, folderPath);
-      this.logger.log(`Completed building transactions...`);
+      this.logger.debug(`Completed building transactions...`);
 
       // Build documents
       const documents = await this.documentService.buildDocumentsAndWriteToFile(set, submissionQueueRecords, folderPath);
-      this.logger.log(`Completed building documents, successfully written to local file system...`);
+      this.logger.debug(`Completed building documents, successfully written to local file system...`);
 
       //Push the submission stage here
       submissionStages.push({ action: 'DOCUMENTS_BUILT', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
       // Send documents for signing
-      this.logger.log(`Sending for signing ... `);
+      this.logger.debug(`Sending for signing ... `);
       await this.documentService.sendForSigning(set, folderPath);
 
       //Push the submission stage here
@@ -78,7 +78,7 @@ export class SubmissionProcessService {
       submissionStages.push({ action: 'PREPARING_FEEDBACK_EMAIL_DATA', dateTime: await this.submissionSetHelper.getFormattedDateTime()  || 'N/A' });
 
       // Get feedback email data before the call to copyToOfficial, which deletes data from workspace
-      this.logger.log(`Collecting data for sending feedback reports...`);
+      this.logger.debug(`Collecting data for sending feedback reports...`);
       const submissionFeedbackEmailDataList = await this.submissionEmailService.collectFeedbackReportDataForEmail(set, submissionQueueRecords, submissionStages);
 
       //Push the submission stage here
@@ -156,7 +156,7 @@ export class SubmissionProcessService {
       throw e; //Rethrow so that error handling takes over
     }
 
-    this.logger.log('Finished copyToOfficial...');
+    this.logger.debug('Finished copyToOfficial...');
   }
 
   private async cleanup(folderPath: string): Promise<void> {

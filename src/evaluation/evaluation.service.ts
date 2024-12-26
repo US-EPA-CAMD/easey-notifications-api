@@ -41,7 +41,7 @@ export class EvaluationService {
   ): Promise<void> {
     const evaluationSet = new EvaluationSet();
     let currentEvaluationQueue: Evaluation | null = null;
-    this.logger.log(
+    this.logger.debug(
       `Queueing evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${
         item?.monPlanId || 'N/A'
       }, UserId: ${userId || 'N/A'}`,
@@ -102,7 +102,7 @@ export class EvaluationService {
       });
 
       if (item.submitMonPlan === true) {
-        this.logger.log(
+        this.logger.debug(
           `Creating a monitoring plan evaluation record. evaluationSet: ${evaluationSet}, MonPlanId: ${
             item?.monPlanId || 'N/A'
           }`,
@@ -138,7 +138,7 @@ export class EvaluationService {
         )
         .getMany();
 
-      this.logger.log(
+      this.logger.debug(
         `Queueing ${testSumsOrderedList?.length} test summary records.`,
       );
 
@@ -165,7 +165,7 @@ export class EvaluationService {
         }
       }
 
-      this.logger.log(`Queueing ${item?.qceIds?.length} QCE records.`);
+      this.logger.debug(`Queueing ${item?.qceIds?.length} QCE records.`);
 
       for (const id of item.qceIds) {
         const qce = await entityManager.findOneBy(QaCertEvent, {
@@ -193,7 +193,7 @@ export class EvaluationService {
         });
       }
 
-      this.logger.log(`Queueing ${item?.teeIds?.length} TEE records.`);
+      this.logger.debug(`Queueing ${item?.teeIds?.length} TEE records.`);
 
       for (const id of item.teeIds) {
         const tee = await entityManager.findOneBy(QaTee, {
@@ -221,7 +221,7 @@ export class EvaluationService {
         });
       }
 
-      this.logger.log(
+      this.logger.debug(
         `Queueing emissions with ${item?.emissionsReportingPeriods?.length} reporting period(s).`,
       );
 
@@ -266,7 +266,7 @@ export class EvaluationService {
         });
       }
 
-      this.logger.log(
+      this.logger.debug(
         `Successfully queued evaluation record. evalSetId: ${evalSetId}, MonPlanId: ${
           item?.monPlanId || 'N/A'
         }`,
@@ -289,7 +289,7 @@ export class EvaluationService {
   }
 
   async queueEvaluationRecords(evaluationDTO: EvaluationDTO): Promise<void> {
-    this.logger.log(
+    this.logger.debug(
       `Starting to queue evaluation records. UserId: ${
         evaluationDTO?.userId || 'N/A'
       }, Items count: ${evaluationDTO?.items?.length || 0}`,
@@ -331,7 +331,7 @@ export class EvaluationService {
           (await this.evaluationSetHelper.getFormattedDateTime()) || 'N/A',
       });
 
-      this.logger.log(
+      this.logger.debug(
         `Finished queueing evaluation records for UserId: ${
           evaluationDTO?.userId || 'N/A'
         }`,
