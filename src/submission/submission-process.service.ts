@@ -96,11 +96,7 @@ export class SubmissionProcessService {
       this.logger.debug('Sending emails with feedback attachment ...');
       for (const submissionFeedbackEmailData of submissionFeedbackEmailDataList) {
 
-          this.logger.debug('Sending email feedback...', {
-            toEmail: submissionFeedbackEmailData.toEmail,
-            ccEmail: submissionFeedbackEmailData.ccEmail,
-            subject: submissionFeedbackEmailData.subject,
-          });
+          this.logger.debug('Sending email feedback...');
 
           // Attempt to send an email. If sending an email for this particular file type fails,
           // log the error and continue attempting to send emails for the others

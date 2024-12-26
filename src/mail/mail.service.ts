@@ -36,9 +36,5 @@ export class MailService {
       .catch((err) => {
         this.logger.error('Fail sent an email', err);
       });
-
-    this.logger.debug('Successfully sent an email', {
-      from: payload.fromEmail,
-    });
   }
 }
