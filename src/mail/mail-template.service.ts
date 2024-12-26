@@ -4,6 +4,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 import { EmailToSend } from '../entities/email-to-send.entity';
 import { EmailTemplate } from '../entities/email-template.entity';
 import { EaseyException } from '@us-epa-camd/easey-common/exceptions';
@@ -16,7 +17,8 @@ export class MailTemplateService {
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
-  ) {}
+    private readonly logger: Logger,
+  ) { }
 
   returnManager() {
     return this.entityManager;
@@ -70,11 +72,11 @@ export class MailTemplateService {
         subject: subject, // Subject line
         html: formattedTemplate, // HTML body content
       })
-      .then((success) => {
-        console.log(success);
+      .then((_success) => {
+        this.logger.debug('Success Send Template Email');
       })
       .catch((err) => {
-        console.log(err);
+        this.logger.error('Fail Send Template Email', err);
       });
   }
 

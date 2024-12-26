@@ -30,11 +30,11 @@ export class MailService {
         subject: payload.subject, // Subject line
         text: payload.message,
       })
-      .then((success) => {
-        console.log(success);
+      .then((_success) => {
+        this.logger.debug('Successfully sent an email');
       })
       .catch((err) => {
-        console.log(err);
+        this.logger.error('Fail sent an email', err);
       });
 
     this.logger.debug('Successfully sent an email', {
