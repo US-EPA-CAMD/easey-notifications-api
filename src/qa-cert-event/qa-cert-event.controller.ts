@@ -8,7 +8,6 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
-  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
@@ -23,11 +22,12 @@ import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaCertEventMaintViewDTO } from '../dto/qa-cert-event-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Cert Event Maintenance')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class QaCertEventController {
   constructor(private service: QaCertEventService) {}
 

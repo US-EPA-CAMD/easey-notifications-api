@@ -8,7 +8,6 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
-  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
@@ -23,10 +22,11 @@ import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaTestSummaryMaintViewDTO } from '../dto/qa-test-summary-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Data Maintenance')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class QaTestSummaryController {
   constructor(private service: QaTestSummaryService) {}
 

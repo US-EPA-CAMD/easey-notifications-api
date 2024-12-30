@@ -2,7 +2,7 @@ import {
   ApiTags,
   ApiSecurity,
   ApiOkResponse,
-  ApiBearerAuth, ApiExcludeController,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Body, Controller, Post, UseGuards, Get, Query } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
@@ -13,11 +13,12 @@ import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
 import { SubmissionProcessService } from './submission-process.service';
 import { ProcessParamsDTO } from '../dto/process-params.dto';
 import { SubmissionsLastUpdatedResponseDTO } from '../dto/submission-last-updated.dto';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Submission')
 @ApiSecurity('APIKey')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class SubmissionController {
   constructor(
     private service: SubmissionService,

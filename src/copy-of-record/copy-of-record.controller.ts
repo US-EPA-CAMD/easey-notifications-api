@@ -5,11 +5,12 @@ import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
 import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Copy of Record')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class CopyOfRecordController {
   constructor(private service: CopyOfRecordService) {}
 

@@ -14,13 +14,14 @@ import { RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
 import { CurrentUser } from '@us-epa-camd/easey-common/interfaces';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { ConfigService } from '@nestjs/config';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 const MAX_UPLOAD_SIZE_MB: number = 30;
 
 @Controller()
 @ApiTags('MATs File Upload')
 @ApiSecurity('APIKey')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class MatsFileUploadController {
   constructor(
     private configService: ConfigService,

@@ -8,7 +8,6 @@ import {
   Body,
 } from '@nestjs/common/decorators';
 import {
-  ApiExcludeController,
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
@@ -23,10 +22,11 @@ import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaTeeMaintViewDTO } from '../dto/qa-tee-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Extension Exemption Maintenance')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class QaTestExtensionExemptionController {
   constructor(private service: QaTestExtensionExemptionService) {}
 

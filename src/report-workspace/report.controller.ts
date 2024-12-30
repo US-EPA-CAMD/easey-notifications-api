@@ -4,7 +4,7 @@ import {
   ApiSecurity,
   ApiOkResponse,
   ApiBearerAuth,
-  ApiOperation, ApiExcludeController,
+  ApiOperation,
 } from '@nestjs/swagger';
 
 import { Get, Query, Controller, UseGuards } from '@nestjs/common';
@@ -15,13 +15,14 @@ import { AuditLog } from '@us-epa-camd/easey-common/decorators';
 import { ReportDTO } from '../dto/report.dto';
 import { DataSetService } from '../dataset/dataset.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Reports')
 @ApiSecurity('APIKey')
 @UseGuards(AuthGuard)
 @ApiBearerAuth('Token')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class ReportWorkspaceController {
   constructor(private service: DataSetService) {}
 

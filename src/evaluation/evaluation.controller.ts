@@ -4,7 +4,6 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiInternalServerErrorResponse,
-  ApiExcludeController,
 } from '@nestjs/swagger';
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
@@ -14,11 +13,12 @@ import { LookupType } from '@us-epa-camd/easey-common/enums';
 import { EvalErrorParamsDTO } from '../dto/eval-error-params.dto';
 import { EvaluationErrorHandlerService } from './evaluation-error-handler.service';
 import { LoggingInterceptor } from '@us-epa-camd/easey-common';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Evaluation')
 @ApiSecurity('APIKey')
-@ApiExcludeController()
+@ApiExcludeControllerByEnv()
 export class EvaluationController {
   constructor(
     private service: EvaluationService,
