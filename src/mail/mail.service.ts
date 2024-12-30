@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { CreateMailDto } from '../dto/create-mail.dto';
+import { Logger } from '@us-epa-camd/easey-common/logger';
 import { ClientConfig } from '../entities/client-config.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -8,6 +9,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(
     private readonly entityManager: EntityManager,
+    private readonly logger: Logger,
     private readonly mailerService: MailerService,
   ) {}
 
@@ -28,11 +30,11 @@ export class MailService {
         subject: payload.subject, // Subject line
         text: payload.message,
       })
-      .then((success) => {
-        console.log(success);
+      .then((_success) => {
+        this.logger.debug(`Successfully sent an email`);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((_err) => {
+        this.logger.error(`Failed to sent an email`);
       });
   }
 }
