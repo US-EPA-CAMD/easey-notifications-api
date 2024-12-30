@@ -187,7 +187,7 @@ export class SubmissionEmailService {
       submissionEmailParamsDto.highestSeverityRecord.severityCode
         .severityCode !== 'NONE'
     ) {
-      this.logger.debug(`Building evaluation reports`);
+      this.logger.log(`Building evaluation reports`);
       const evaluationReportDocuments = [];
       await this.mailEvalService.buildEvalReports( submissionSet, submissionQueueRecords, evaluationReportDocuments,);
 
@@ -210,7 +210,7 @@ export class SubmissionEmailService {
     });
 
     //Finally, return the collected email data
-    this.logger.debug(`Completed processing building data for : ${submissionEmailParamsDto.processCode}`);
+    this.logger.log(`Completed processing building data for : ${submissionEmailParamsDto.processCode}`);
     return new SubmissionFeedbackEmailData(
       submissionEmailParamsDto.toEmail,
       submissionEmailParamsDto.ccEmail,
