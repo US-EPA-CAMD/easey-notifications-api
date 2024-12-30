@@ -1,7 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Logger } from '@us-epa-camd/easey-common/logger';
 import { Evaluation } from '../entities/evaluation.entity';
 import { EvaluationSet } from '../entities/evaluation-set.entity';
 import { MonitorPlan } from '../entities/monitor-plan.entity';
@@ -37,7 +36,6 @@ export class MailEvalService {
     private readonly configService: ConfigService,
     private dataSetService: DataSetService,
     private copyOfRecordService: CopyOfRecordService,
-    private readonly logger: Logger,
   ) {}
 
   returnManager() {
@@ -373,7 +371,7 @@ export class MailEvalService {
   ): Promise<void> {
     if (attempt < 3) {
       try {
-        await this.mailerService.sendMail({
+        const success = await this.mailerService.sendMail({
           to, // List of receivers email addresses
           cc,
           from,
@@ -382,10 +380,11 @@ export class MailEvalService {
           context: templateContext,
           attachments,
         });
+        console.log(success);
       } catch (err) {
         // Wait before retrying
         await new Promise((resolve) => setTimeout(resolve, attempt * 1000 * attempt));
-        this.logger.debug('Attempting to send failed email request');//
+        console.log('Attempting to send failed email request'); //
         // Retry sending the email
         await this.sendEmailWithRetry(
           to, // List of receivers email address
