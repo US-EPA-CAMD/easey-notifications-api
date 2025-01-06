@@ -371,7 +371,7 @@ export class MailEvalService {
   ): Promise<void> {
     if (attempt < 3) {
       try {
-        const success = await this.mailerService.sendMail({
+        await this.mailerService.sendMail({
           to, // List of receivers email addresses
           cc,
           from,
@@ -380,11 +380,9 @@ export class MailEvalService {
           context: templateContext,
           attachments,
         });
-        console.log(success);
       } catch (err) {
         // Wait before retrying
         await new Promise((resolve) => setTimeout(resolve, attempt * 1000 * attempt));
-        console.log('Attempting to send failed email request'); //
         // Retry sending the email
         await this.sendEmailWithRetry(
           to, // List of receivers email address
