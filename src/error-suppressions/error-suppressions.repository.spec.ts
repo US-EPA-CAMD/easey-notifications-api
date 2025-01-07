@@ -23,8 +23,8 @@ filters.severityCode = 'NONE';
 filters.orisCode = 3;
 filters.locations = ['1', '2'];
 filters.reasonCode = 'BUG';
-filters.beginDateHrQtr = '2019 Q1';
-filters.endDateHrQtr = '2019 Q2';
+filters.addDateAfter = '2019 Q1';
+filters.addDateBefore = '2019 Q2';
 filters.active = true;
 
 describe('ErrorSuppressionsRepository', () => {
@@ -46,9 +46,9 @@ describe('ErrorSuppressionsRepository', () => {
     repository = module.get(ErrorSuppressionsRepository);
     queryBuilder = module.get(SelectQueryBuilder);
 
-    QueryBuilderHelper.beginDateHrQtr = jest.fn().mockReturnValue(queryBuilder);
+    QueryBuilderHelper.addDateAfter = jest.fn().mockReturnValue(queryBuilder);
 
-    QueryBuilderHelper.endDateHrQtr = jest.fn().mockReturnValue(queryBuilder);
+    QueryBuilderHelper.addDateBefore = jest.fn().mockReturnValue(queryBuilder);
 
     queryBuilder.select.mockReturnValue(queryBuilder);
     queryBuilder.leftJoin.mockReturnValue(queryBuilder);

@@ -19,17 +19,17 @@ export class QueryBuilderHelper {
     }
   }
 
-  public static beginDateHrQtr(query: any, dateHrQtrValue: string) {
+  public static addDateAfter(query: any, dateHrQtrValue: string) {
     const beginDate = this.dateHrQtr(dateHrQtrValue, true);
-    query.andWhere('es.matchTimeBeginValue >= :beginDate', {
+    query.andWhere('es.addDate >= :beginDate', {
       beginDate: beginDate,
     });
     return query;
   }
 
-  public static endDateHrQtr(query: any, dateHrQtrValue: string) {
+  public static addDateBefore(query: any, dateHrQtrValue: string) {
     const endDate = this.dateHrQtr(dateHrQtrValue, false);
-    query.andWhere('es.matchTimeEndValue <= :endDate', { endDate: endDate });
+    query.andWhere('es.addDate <= :endDate', { endDate: endDate });
     return query;
   }
 }

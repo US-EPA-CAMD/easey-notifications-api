@@ -22,8 +22,8 @@ export class ErrorSuppressionsRepository extends Repository<EsSpec> {
       orisCode,
       locations,
       reasonCode,
-      beginDateHrQtr,
-      endDateHrQtr,
+      addDateAfter,
+      addDateBefore,
       active,
     } = params;
     let query = this.createQueryBuilder('es')
@@ -91,11 +91,11 @@ export class ErrorSuppressionsRepository extends Repository<EsSpec> {
         reasonCode: reasonCode.toUpperCase(),
       });
     }
-    if (beginDateHrQtr) {
-      query = QueryBuilderHelper.beginDateHrQtr(query, beginDateHrQtr);
+    if (addDateAfter) {
+      query = QueryBuilderHelper.addDateAfter(query, addDateAfter);
     }
-    if (endDateHrQtr) {
-      query = QueryBuilderHelper.endDateHrQtr(query, endDateHrQtr);
+    if (addDateBefore) {
+      query = QueryBuilderHelper.addDateBefore(query, addDateBefore);
     }
 
     if (String(active) === String(true)) {
