@@ -15,7 +15,6 @@ import { AuditLog } from '@us-epa-camd/easey-common/decorators';
 import { BulkFileDTO } from '../dto/bulk_file.dto';
 import { BulkFileService } from './bulk-file.service';
 import { BulkFileInputDTO } from '../dto/bulk_file_input.dto';
-import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 import {
   ApportionedEmissionsQuarterlyDTO,
   ApportionedEmissionsStateDTO,
@@ -23,6 +22,7 @@ import {
   TimePeriodDTO,
 } from '../dto/bulk-file-mass-generation.dto';
 import { MassBulkFileService } from './mass-bulk-file.service';
+import { ApiExcludeEndpointByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
