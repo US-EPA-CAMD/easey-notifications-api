@@ -84,12 +84,6 @@ export class EvaluationErrorHandlerService {
             errorNote,
           );
         }
-        await this.evaluationSetHelper.setRecordStatusCode(
-          evaluationSet,
-          [currentEvaluationQueue],
-          'ERROR',
-          errorNote,
-        );
       } catch (updateQueueError) {
         this.logger.error(
           'Error during handleQueueingError for evaluation set, while updating evaluation queue:' +
