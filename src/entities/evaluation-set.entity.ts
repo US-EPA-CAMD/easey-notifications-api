@@ -10,8 +10,8 @@ export class EvaluationSet extends BaseEntity {
   @Column({ name: 'mon_plan_id' })
   monPlanIdentifier: string;
 
-  @Column({ name: 'submitted_on' })
-  submittedOn: Date;
+  @Column({ name: 'queued_time' })
+  queuedTime: Date;
 
   @Column({ name: 'user_id' })
   userIdentifier: string;
