@@ -13,10 +13,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 import { QaCertEventService } from './qa-cert-event.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -25,10 +22,12 @@ import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaCertEventMaintViewDTO } from '../dto/qa-cert-event-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Cert Event Maintenance')
+@ApiExcludeControllerByEnv()
 export class QaCertEventController {
   constructor(private service: QaCertEventService) {}
 

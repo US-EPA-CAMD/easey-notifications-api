@@ -27,7 +27,8 @@
     "up": "yarn && yarn start:dev"
   },
   "resolutions": {
-    "xml2js": "^0.5.0"
+    "xml2js": "^0.5.0",
+    "wrap-ansi": "^7.0.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.105.0",
@@ -39,7 +40,7 @@
     "@nestjs/platform-express": "^10.4.7",
     "@nestjs/swagger": "^8.0.2",
     "@nestjs/typeorm": "^10.0.2",
-    "@us-epa-camd/easey-common": "18.1.2",
+    "@us-epa-camd/easey-common": "19.0.5",
     "axios": "^1.7.7",
     "class-transformer": "0.4.0",
     "class-validator": "0.14.1",

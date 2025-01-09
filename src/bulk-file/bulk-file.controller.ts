@@ -10,11 +10,11 @@ import {
 
 import { Controller, Get, Req, Post, Body, UseGuards } from '@nestjs/common';
 import { ClientTokenGuard } from '@us-epa-camd/easey-common/guards';
+import { AuditLog } from '@us-epa-camd/easey-common/decorators';
 
 import { BulkFileDTO } from '../dto/bulk_file.dto';
 import { BulkFileService } from './bulk-file.service';
 import { BulkFileInputDTO } from '../dto/bulk_file_input.dto';
-import { ApiExcludeEndpointByEnv } from '../utilities/swagger-decorator.const';
 import {
   ApportionedEmissionsQuarterlyDTO,
   ApportionedEmissionsStateDTO,
@@ -22,6 +22,7 @@ import {
   TimePeriodDTO,
 } from '../dto/bulk-file-mass-generation.dto';
 import { MassBulkFileService } from './mass-bulk-file.service';
+import { ApiExcludeEndpointByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
@@ -57,6 +58,10 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated apportioned emission bulk files by state',
+    requestBodyOutFields: '*'
+  })
   async massBulkFileState(
     @Body() params: ApportionedEmissionsStateDTO,
   ): Promise<void> {
@@ -68,6 +73,10 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated apportioned emission bulk files by quarter',
+    requestBodyOutFields: '*'
+  })
   async massBulkFileQuarter(
     @Body() params: ApportionedEmissionsQuarterlyDTO,
   ): Promise<void> {
@@ -79,6 +88,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated bulk files facility',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: '*',
+  })
   async massBulkFileFacility(@Body() params: TimePeriodDTO): Promise<void> {
     await this.massService.generateFacility(params);
   }
@@ -88,6 +102,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated emissions compliance bulk files',
+    requestHeadersOutFields: ['x-client-id'],
+    responseBodyOutFields: '*',
+  })
   async massBulkFileEmissionsCompliance(): Promise<void> {
     await this.massService.generateEmissionsCompliance();
   }
@@ -97,6 +116,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated allowance holdings bulk files',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: '*',
+  })
   async massBulkFileAllowanceHoldings(
     @Body() params: ProgramCodeDTO,
   ): Promise<void> {
@@ -108,6 +132,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated allowance compliance bulk files',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: '*',
+  })
   async massBulkFileAllowanceCompliance(
     @Body() params: ProgramCodeDTO,
   ): Promise<void> {
@@ -119,6 +148,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated allowance transactions bulk files',
+    requestHeadersOutFields: ['x-client-id'],
+    requestBodyOutFields: '*',
+  })
   async massBulkFileAllowanceTransactions(
     @Body() params: ProgramCodeDTO,
   ): Promise<void> {
@@ -134,6 +168,11 @@ export class BulkFileController {
   @ApiBearerAuth('ClientToken')
   @UseGuards(ClientTokenGuard)
   @ApiExcludeEndpointByEnv()
+  @AuditLog({
+    label:'Generated bulk file metadata',
+    requestHeadersOutFields: ['x-client-id'],
+    responseBodyOutFields: '*',
+  })
   async addBulkFile(
     @Body() bulkDataFile: BulkFileInputDTO,
   ): Promise<BulkFileDTO> {

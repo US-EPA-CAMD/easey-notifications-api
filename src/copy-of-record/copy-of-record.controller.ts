@@ -1,14 +1,16 @@
 import { Controller, Res, StreamableFile, Get, Query } from '@nestjs/common';
-import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CopyOfRecordService } from './copy-of-record.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
 import type { Response } from 'express';
-import { RoleGuard } from '@us-epa-camd/easey-common/decorators';
+import { AuditLog, RoleGuard } from '@us-epa-camd/easey-common/decorators';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('Copy of Record')
+@ApiExcludeControllerByEnv()
 export class CopyOfRecordController {
   constructor(private service: CopyOfRecordService) {}
 
@@ -65,6 +67,10 @@ export class CopyOfRecordController {
     },
     LookupType.Facility,
   )
+  @AuditLog({
+    label:'Copy of record retrieved from workspace',
+    requestQueryOutFields: '*'
+  })
   generatePdfWorkspace(
     @Query() params: ReportParamsDTO,
     @Res({ passthrough: true }) res: Response,

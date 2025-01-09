@@ -10,16 +10,19 @@ import {
 import { Get, Query, Controller, UseGuards } from '@nestjs/common';
 
 import { AuthGuard } from '@us-epa-camd/easey-common/guards';
+import { AuditLog } from '@us-epa-camd/easey-common/decorators';
 
 import { ReportDTO } from '../dto/report.dto';
 import { DataSetService } from '../dataset/dataset.service';
 import { ReportParamsDTO } from '../dto/report-params.dto';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 
 @Controller()
 @ApiTags('Reports')
 @ApiSecurity('APIKey')
 @UseGuards(AuthGuard)
 @ApiBearerAuth('Token')
+@ApiExcludeControllerByEnv()
 export class ReportWorkspaceController {
   constructor(private service: DataSetService) {}
 
@@ -30,6 +33,9 @@ export class ReportWorkspaceController {
   })
   @ApiOperation({
     description: 'Retrieves list of workspace reports available.',
+  })
+  @AuditLog({
+    label:'Retrieved workspace reports',
   })
   async getAvailableReports() {
     return this.service.getAvailableDataSets();
@@ -49,6 +55,10 @@ export class ReportWorkspaceController {
     name: 'testId',
     required: false,
     explode: false,
+  })
+  @AuditLog({
+    label:'Retrieved workspace report',
+    requestQueryOutFields: '*',
   })
   async getReport(@Query() params: ReportParamsDTO) {
     return this.service.getDataSet(params, true);
