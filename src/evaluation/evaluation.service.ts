@@ -54,7 +54,7 @@ export class EvaluationService {
       evaluationSet.monPlanIdentifier = item.monPlanId;
       evaluationSet.userIdentifier = userId;
       evaluationSet.userEmail = userEmail;
-      evaluationSet.submittedOn = currentTime;
+      evaluationSet.queuedTime = currentTime;
 
       // Push queueing stage here
       queueingStages.push({
