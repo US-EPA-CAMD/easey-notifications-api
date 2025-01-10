@@ -86,6 +86,9 @@ export class EmSubmissionAccessViewRepository extends Repository<EmSubmissionAcc
       );
     }
 
+    query.andWhere(
+      `(em.submissionAvailabilityCode != 'DELETE')`
+    );
     return query.getMany();
   }
 }
