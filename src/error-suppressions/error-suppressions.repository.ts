@@ -83,7 +83,7 @@ export class ErrorSuppressionsRepository extends Repository<EsSpec> {
     if (locations) {
       query.andWhere(
         `string_to_array(es.locations, ',') && string_to_array(:locations, ',')`,
-        { locations: locations.join(',') },
+        { locations: locations },
       );
     }
     if (reasonCode) {
