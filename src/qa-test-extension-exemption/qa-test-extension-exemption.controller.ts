@@ -13,10 +13,6 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
 import { QaTestExtensionExemptionService } from './qa-test-extension-exemption.service';
 import { QaCertMaintParamsDto } from '../dto/qa-cert-maint-params.dto';
 import { AuditLog, RoleGuard, User } from '@us-epa-camd/easey-common/decorators';
@@ -25,9 +21,12 @@ import { QaUpdateDto } from '../dto/qa-update.dto';
 import { SuccessMessageDTO } from '../dto/success-message.dto';
 import { QaTeeMaintViewDTO } from '../dto/qa-tee-maint-vw.dto';
 import { LookupType } from '@us-epa-camd/easey-common/enums';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
 @Controller()
 @ApiSecurity('APIKey')
 @ApiTags('QA Test Extension Exemption Maintenance')
+@ApiExcludeControllerByEnv()
 export class QaTestExtensionExemptionController {
   constructor(private service: QaTestExtensionExemptionService) {}
 

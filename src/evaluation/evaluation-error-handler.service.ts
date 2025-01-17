@@ -232,7 +232,7 @@ export class EvaluationErrorHandlerService {
     try {
       evaluationQueueDateDisplay =
         await this.evaluationSetHelper.getFormattedDateTime(
-          evaluationSet?.submittedOn || new Date(),
+          evaluationSet?.queuedTime || new Date(),
         );
     } catch (dateDisplayError) {
       this.logger.error('Failed to get submission date display.', dateDisplayError.stack, );

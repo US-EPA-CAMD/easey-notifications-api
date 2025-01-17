@@ -7,11 +7,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  ApiExcludeControllerByEnv,
-  BadRequestResponse,
-  NotFoundResponse,
-} from '../utilities/swagger-decorator.const';
+import { ApiExcludeControllerByEnv } from '../decorators/swagger-decorator';
+import { BadRequestResponse, NotFoundResponse } from '@us-epa-camd/easey-common/utilities/common-swagger';
 import { EmSubmissionAccessService } from './em-submission-access.service';
 import {
   EmSubmissionAccessCreateDTO,
