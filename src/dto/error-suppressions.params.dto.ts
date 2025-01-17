@@ -23,7 +23,6 @@ import { CheckCatalogResult } from '../entities/check-catalog-result.entity';
 import { Plant } from '../entities/plant.entity';
 import { EsReasonCode } from '../entities/es-reason-code.entity';
 import { ErrorMessages } from '@us-epa-camd/easey-common/constants';
-import { IsPropertyExists } from '../pipes/is-property-exists.pipe';
 
 const msgA =
   'The [property] is not valid refer to the list of available [property]s for valid values';
@@ -176,7 +175,7 @@ export class ErrorSuppressionsParamsDTO {
       });
     },
   })
-  beginDateHrQtr?: string;
+  addDateAfter?: string;
 
   @IsOptional()
   @ApiProperty()
@@ -188,12 +187,7 @@ export class ErrorSuppressionsParamsDTO {
       });
     },
   })
-  @IsPropertyExists('beginDateHrQtr', {
-    message: (args: ValidationArguments) => {
-      return `beginDateHrQtr cannot be null, undefined, or empty if ${args.property} is filled`;
-    },
-  })
-  endDateHrQtr?: string;
+  addDateBefore?: string;
 
   @IsOptional()
   @ApiProperty()
